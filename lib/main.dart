@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_heart/components/circlePainter.dart';
 import 'package:flutter_heart/db/database.dart';
+import 'package:flutter_heart/pages/main/intro_page.dart';
 import 'package:flutter_heart/pages/onBoarding.dart';
 import 'package:flutter_heart/pages/settings.dart';
 import 'package:flutter_heart/pages/splash.dart';
@@ -12,6 +12,25 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => OnBoarding(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -19,21 +38,27 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DatabaseProvider()),
         ChangeNotifierProxyProvider<DatabaseProvider, DbHelper>(
           create: (context) => DbHelper([], null),
-          update: (context, db, previous) => DbHelper(previous?.recipes, db),
+          update: (context, db, previous) => DbHelper(previous?.records, db),
         ),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Enjoying Heart Rate Monitor: bpm | bpm',
+          title: 'Heart Rate Monitor: bpm | bpm',
           theme: ThemeData(
             primarySwatch: Colors.blue,
             fontFamily: "Montserrat",
             scaffoldBackgroundColor: Color.fromRGBO(253, 254, 255, 1),
           ),
-          home: MyHomePage(),
+          home: AnimatedSwitcher(
+            duration: Duration(milliseconds: 2000),
+            transitionBuilder: (Widget child, Animation<double> animation) =>
+                ScaleTransition(scale: animation, child: child),
+            child: MyHomePage(),
+          ),
           routes: {
             '/splash': (ctx) => SplashScreen(),
             '/onBoarding': (ctx) => OnBoarding(),
+            '/main': (cts) => Intro(),
             '/settings': (ctx) => SettingsPage()
           }),
     );

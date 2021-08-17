@@ -26,20 +26,20 @@ class DbHelper with ChangeNotifier {
   // }
 
   TestPulse getRecord(int id) {
-    final recipe = _userRecords!.firstWhere((element) => element.id == id);
+    final pules = _userRecords!.firstWhere((element) => element.id == id);
 
-    return recipe;
+    return pules;
   }
 
-  get recipes => [..._userRecords!];
+  List<TestPulse> get records => [..._userRecords!];
 
-  void addRecipe(TestPulse recipe) {
-    _userRecords!.add(recipe);
+  void addRecord(TestPulse pules) {
+    _userRecords!.add(pules);
     notifyListeners();
-    _provider!.insert(recipe);
+    _provider!.insert(pules);
   }
 
-  void removeRecipe({TestPulse? pulse, int? id}) {
+  void removeRecord({TestPulse? pulse, int? id}) {
     if (pulse == null && id == null) {
       throw new Error();
     }

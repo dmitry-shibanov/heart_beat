@@ -3,8 +3,8 @@ import 'package:flutter_heart/pages/intro/help_us.dart';
 import 'package:flutter_heart/pages/intro/OnBoardingOne.dart';
 import 'package:flutter_heart/pages/intro/onBoardingCommon.dart';
 import 'package:flutter_heart/pages/intro/onBoardingFinal.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:in_app_review/in_app_review.dart';
-import 'package:rating_dialog/rating_dialog.dart';
 
 class OnBoarding extends StatefulWidget {
   @override
@@ -16,9 +16,20 @@ class _OnBoardingState extends State<OnBoarding> {
   final onBoardingPages = [
     OnBoardingOne(),
     HelpUsPage(),
-    OnBoardingCommon(0),
-    OnBoardingCommon(1),
-    OnBoardingCommon(2),
+    OnBoardingCommon(
+      imageStr: 'assets/images/green_man.png',
+      content: 'Hold your finger on the camera lens and the flashlight',
+    ),
+    OnBoardingCommon(
+      imageStr: 'assets/images/run_man.png',
+      content:
+          'The orthostatic test is one of the tools that allows you to find a balance between training and recovery',
+    ),
+    OnBoardingCommon(
+      imageStr: 'assets/images/bodybuilding_man.png',
+      content:
+          'The orthostatic test is one of the tools that allows you to find a balance between training and recovery',
+    ),
     OnBoardingFinal()
   ];
   int currentPage = 0;
@@ -31,10 +42,7 @@ class _OnBoardingState extends State<OnBoarding> {
 
   void _rateAndReviewApp() async {
     final _inAppReview = InAppReview.instance;
-      _inAppReview.requestReview();
-
     if (await _inAppReview.isAvailable()) {
-      print('request actual review from store');
       _inAppReview.requestReview();
     } else {
       print('open actual store listing');
@@ -46,50 +54,51 @@ class _OnBoardingState extends State<OnBoarding> {
     }
   }
 
-  // show the rating dialog
-  void _showRatingDialog() {
-    final _dialog = RatingDialog(
-      // your app's name?
-      title: 'Rating Dialog',
-      // encourage your user to leave a high rating?
-      message:
-          'Tap a star to set your rating. Add more description here if you want.',
-      // your app's logo?
-      image: const FlutterLogo(size: 100),
-      submitButton: 'Submit',
-      onCancelled: () => print('cancelled'),
-      onSubmitted: (response) {
-        print('rating: ${response.rating}, comment: ${response.comment}');
-
-        // TODO: add your own logic
-        if (response.rating < 3.0) {
-          // send their comments to your email or anywhere you wish
-          // ask the user to contact you instead of leaving a bad review
-        } else {
-          _rateAndReviewApp();
-        }
-      },
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      barrierDismissible: true, // set to false if you want to force a rating
-      builder: (context) => _dialog,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: currentPage == 5
+            ? IconButton(
+                icon: const Icon(
+                  Icons.close,
+                  color: Color.fromRGBO(70, 70, 70, 1),
+                ),
+                onPressed: () =>
+                    Navigator.pushReplacementNamed(context, '/main'),
+              )
+            : null,
         backgroundColor: Colors.white10,
         elevation: 0.0,
+        actions: [
+          currentPage == 5
+              ? Container(
+                  margin: EdgeInsets.symmetric(horizontal: 8.0),
+                  height: 15.0,
+                  decoration: ShapeDecoration(
+                    shape: StadiumBorder(),
+                  ),
+                  child: MaterialButton(
+                    height: 15.0,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    shape: const StadiumBorder(),
+                    child: const Text(
+                      'Restore Purcheses',
+                      style: TextStyle(
+                          color: Color.fromRGBO(70, 70, 70, 1),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    onPressed: () async {},
+                  ),
+                )
+              : const SizedBox()
+        ],
       ),
       body: Column(
         children: [
           Container(
-            height: MediaQuery.of(context).size.height * 0.7,
+            height: MediaQuery.of(context).size.height * 0.65,
             child: PageView(
               controller: _pageController,
               physics: new NeverScrollableScrollPhysics(),
@@ -102,7 +111,7 @@ class _OnBoardingState extends State<OnBoarding> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(bottom: 48),
+            margin: EdgeInsets.only(bottom: 36),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -119,6 +128,20 @@ class _OnBoardingState extends State<OnBoarding> {
               ],
             ),
           ),
+          currentPage == 5
+              ? Container(
+                  margin: EdgeInsets.only(bottom: 16.0),
+                  child: Text(
+                    'FREE unlimited access',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 17,
+                      color: Color.fromRGBO(38, 38, 38, 1),
+                    ),
+                  ),
+                )
+              : SizedBox(),
           Container(
             width: double.infinity,
             margin: EdgeInsets.symmetric(horizontal: 16.0),
@@ -136,31 +159,55 @@ class _OnBoardingState extends State<OnBoarding> {
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               shape: StadiumBorder(),
               child: Text(
-                'Next',
+                currentPage == 5 ? 'Subscribe' : 'Next',
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 17,
                     fontWeight: FontWeight.w600),
               ),
-              onPressed: _showRatingDialog
-              //   print(currentPage);
-              //   print(onBoardingPages.length);
-              //   if (onBoardingPages.length == currentPage + 1) {
-              //     Navigator.pushReplacementNamed(context, '/settings');
-              //     await showDialog(
-              //       context: context,
-              //       builder: (context) => _dialog,
-              //     );
-              //   } else {
-              //     _pageController.animateToPage(
-              //       currentPage + 1,
-              //       duration: const Duration(milliseconds: 400),
-              //       curve: Curves.easeInOut,
-              //     );
-              //   }
-              // },
+              onPressed: () async {
+                print("currentPage is ${currentPage}");
+                print(onBoardingPages.length);
+                if (onBoardingPages.length == currentPage + 1) {
+                  Navigator.pushReplacementNamed(context, '/main');
+                } else {
+                  _pageController.animateToPage(
+                    currentPage + 1,
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
+                  );
+                  if (currentPage + 1 == 1) {
+                    print('came here');
+                    _rateAndReviewApp();
+                  }
+                }
+              },
             ),
           ),
+          currentPage == 5
+              ? Container(
+                  margin: EdgeInsets.only(right: 24.0, left: 24.0, top: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Privacy Policy',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            color: Color.fromRGBO(70, 70, 70, 1)),
+                      ),
+                      Text(
+                        'Terms Of Use',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            color: Color.fromRGBO(70, 70, 70, 1)),
+                      )
+                    ],
+                  ),
+                )
+              : SizedBox()
         ],
       ),
     );

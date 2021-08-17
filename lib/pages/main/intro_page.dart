@@ -1,33 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_heart/pages/charts/Charts.dart';
+import 'package:flutter_heart/pages/history_page.dart';
+import 'package:flutter_heart/pages/measure/measure_pulse.dart';
+import 'package:flutter_heart/pages/orthostaticTest/firstIntro.dart';
+import 'package:flutter_heart/pages/orthostaticTest/orthostaticTimer.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
-class Intro extends StatelessWidget {
+class Intro extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _IntroState();
+  }
+}
+
+class _IntroState extends State<Intro> {
   final List<int> images = [1];
   final List<String> content = [
     "Hold your finger on the\ncamera lens and the\nflashlight",
     "The orthostatic test is one of\nthe tools that allows you to\nfind a balance between\ntraining and recovery"
   ];
+  final List<Widget> _pages = [
+    MeasurePulse(),
+    HistoryPage(),
+    Charts(),
+    OrthostaticTimer()
+  ];
   int currentPage = 0;
+  int _bottomIndex = 0;
+
+  void changeIndex(int index) {
+    setState(() {
+      _bottomIndex = index;
+    });
+  }
+
 // To-Do gradient
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          ElevatedButton(
-              onPressed: () => null,
-              child: Text(
-                'Next',
-                style: TextStyle(color: Colors.white),
-              ),
-              style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          side: BorderSide(color: Colors.red)))))
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: _bottomIndex == 0 ? 0.0 : 4.0,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Feather.settings,
+              color: Colors.grey,
+            ),
+            onPressed: () => Navigator.pushNamed(context, '/settings'),
+          )
         ],
       ),
+      body: Container(
+          margin: EdgeInsets.only(top: 16.0), child: _pages[_bottomIndex]),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _bottomIndex,
+        selectedItemColor: Colors.redAccent,
+        type: BottomNavigationBarType.fixed,
+        onTap: changeIndex,
         items: [
           BottomNavigationBarItem(
               icon: Icon(FontAwesome.heartbeat), label: 'Measure'),
@@ -38,9 +68,6 @@ class Intro extends StatelessWidget {
           BottomNavigationBarItem(
               icon: Icon(Ionicons.ios_pulse), label: 'Orthostatic test')
         ],
-        currentIndex: currentPage,
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) => null,
       ),
     );
   }

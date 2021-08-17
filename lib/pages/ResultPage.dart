@@ -11,21 +11,29 @@ class OrthostaticTestResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ...points
-            .map((e) => ListTile(
-                  leading: Icon(AntDesign.arrowright),
-                  title: Text(
-                    e,
-                    style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                        color: Color.fromRGBO(38, 38, 38, 1)),
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 24.0),
+      child: Column(
+        children: [
+          ...points
+              .map(
+                (e) => Container(
+                  margin: EdgeInsets.symmetric(vertical: 8.0),
+                  child: ListTile(
+                    leading: Icon(AntDesign.arrowright),
+                    title: Text(
+                      e,
+                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromRGBO(38, 38, 38, 1)),
+                    ),
                   ),
-                ))
-            .toList()
-      ],
+                ),
+              )
+              .toList()
+        ],
+      ),
     );
   }
 }

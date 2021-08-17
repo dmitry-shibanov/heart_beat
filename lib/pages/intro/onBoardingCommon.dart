@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
 
 class OnBoardingCommon extends StatelessWidget {
-  int index;
+  late final String imageStr;
+  late final String content;
 
-  OnBoardingCommon(this.index);
-
-  final images = [
-    'assets/images/green_man.png',
-    'assets/images/run_man.png',
-    'assets/images/bodybuilding_man.png'
-  ];
-
-  final content = [
-    'Hold your finger on the camera lens and the flashlight',
-    'The orthostatic test is one of the tools that allows you to find a balance between training and recovery',
-    'The orthostatic test is one of the tools that allows you to find a balance between training and recovery'
-  ];
+  OnBoardingCommon({required this.imageStr, required this.content});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +14,7 @@ class OnBoardingCommon extends StatelessWidget {
         Container(
           margin: EdgeInsets.symmetric(horizontal: 24.0),
           child: Text(
-            content[this.index],
+            content,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 22,
@@ -37,9 +26,9 @@ class OnBoardingCommon extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(right: 52, left: 42, top: 50),
           child: Image.asset(
-            images[this.index],
+            imageStr,
             width: double.infinity,
-            height: 281,
+            // height: 281,
             fit: BoxFit.cover,
           ),
         )

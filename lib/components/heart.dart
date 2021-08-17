@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_heart/components/circlePainter.dart';
 
 class Heart extends StatefulWidget {
   @override
@@ -14,14 +13,6 @@ class _HeartState extends State<Heart> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        alignment: Alignment(0.0, 0.0),
-        children: [
-          Image.asset('assets/images/pink_circle.png'),
-          Image.asset('assets/images/red_heart.png'),
-        ],
-      ),
-    );
+    return Container(child: Image.asset('assets/images/full_heart.png'));
   }
 }

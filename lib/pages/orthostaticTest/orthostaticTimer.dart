@@ -8,7 +8,7 @@ class OrthostaticTimer extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Orthostatic test is an easy way to monitor the state of your body and its adaptation to stress',
+            'Lie down for 10 minutes, and then measure your pulse at rest',
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 22,
