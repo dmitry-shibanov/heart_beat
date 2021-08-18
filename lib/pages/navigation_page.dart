@@ -14,6 +14,8 @@ class Intro extends StatefulWidget {
 
 class _IntroState extends State<Intro> {
   final List<int> images = [1];
+  final List<String> titles = ['History', 'Statistics', 'Orthostatic Test'];
+
   final List<String> content = [
     "Hold your finger on the\ncamera lens and the\nflashlight",
     "The orthostatic test is one of\nthe tools that allows you to\nfind a balance between\ntraining and recovery"
@@ -33,11 +35,23 @@ class _IntroState extends State<Intro> {
     });
   }
 
-// To-Do gradient
+  Widget? setTitle() {
+    if (_bottomIndex > 0) {
+      return Text(
+        titles[_bottomIndex - 1],
+        style: TextStyle(
+            color: Colors.black, fontSize: 17, fontWeight: FontWeight.w600),
+      );
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: setTitle(),
         backgroundColor: Colors.white,
         elevation: _bottomIndex == 0 ? 0.0 : 4.0,
         actions: [
