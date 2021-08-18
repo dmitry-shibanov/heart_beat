@@ -5,6 +5,7 @@ import 'package:flutter_heart/pages/onBoarding_page.dart';
 import 'package:flutter_heart/pages/settings_page.dart';
 import 'package:flutter_heart/pages/splash_screen.dart';
 import 'package:flutter_heart/providers/data_helper.dart';
+import 'package:flutter_heart/providers/main_page_provider.dart';
 import 'package:flutter_heart/providers/pulse_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => DatabaseProvider()),
         ChangeNotifierProvider(create: (_) => PulseProvider()),
+        ChangeNotifierProvider(create: (_) => MainProvider()),
         ChangeNotifierProxyProvider<DatabaseProvider, DbHelper>(
           create: (context) => DbHelper([], null),
           update: (context, db, previous) => DbHelper(previous?.records, db),

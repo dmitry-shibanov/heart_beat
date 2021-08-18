@@ -8,6 +8,7 @@ import 'package:flutter_heart/pages/navigation_main/orthostaticTest/firstMeasure
 import 'package:flutter_heart/pages/navigation_main/orthostaticTest/orthostaticTimer.dart';
 import 'package:flutter_heart/pages/navigation_main/orthostaticTest/resultInfo.dart';
 import 'package:flutter_heart/pages/navigation_main/orthostaticTest/testResult.dart';
+import 'package:flutter_heart/providers/main_page_provider.dart';
 import 'package:flutter_heart/providers/pulse_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -70,18 +71,23 @@ class _OrthostaticState extends State<Orthostatic> {
     }
   }
 
-  // Function() getOnPressed() {
-  //   switch(currentPage) {
-  //     case 1:
-  //     case 4:
-  //       return () => null;
-  //     case:
-  //   }
-  // }
+  String getMessage(PulseProvider provider) {
+    final number = provider.diff;
+    if (number <= 12) {
+      return 'The range from 0 to 12 beats indicates good fitness level';
+    } else if (number >= 13 && number < 18) {
+      return 'The difference of 13-18 beats shows a healthy, but not trained person';
+    } else if (number >= 18 && number <= 25) {
+      return 'The range from 18 to 25 beats indicates a complete lack of physical fitness';
+    } else {
+      return 'If the difference is more than 25 beats, then we can talk either about fatigue, or about a disease of the cardiovascular system or other health problems';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<PulseProvider>(context);
+    final mainProvider = Provider.of<MainProvider>(context);
     return Column(
       children: [
         Container(
@@ -117,13 +123,21 @@ class _OrthostaticState extends State<Orthostatic> {
                 imageAsset: 'assets/images/sand_clocks.png',
                 action: (bool value) {
                   setDisabled(value);
-                  _pageController.nextPage(
-                      duration: Duration(seconds: 1), curve: Curves.easeInOut);
+                  provider.startTimer(
+                      Duration(minutes: 1),
+                      () => _pageController.nextPage(
+                          duration: Duration(seconds: 1),
+                          curve: Curves.easeInOut));
+                  // if (provider.isActive)
+                  //   _pageController.nextPage(
+                  //       duration: Duration(seconds: 1),
+                  //       curve: Curves.easeInOut);
                 },
               ),
+              FirstMeasure(startMeasure: () => null),
               OrthostaticResult(
                 resultPulse: provider.pulse.toString(),
-                message: 'Good fitness level',
+                message: getMessage(provider),
               ),
               OrthostaticTestResult()
             ],
@@ -137,13 +151,15 @@ class _OrthostaticState extends State<Orthostatic> {
             },
           ),
         ),
-        if (currentPage != 6)
+        if (currentPage != 7)
           Expanded(
             child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Button(
                   title: setButtonTitle(),
-                  textColor: currentPage == 2 ? Colors.red : Colors.white,
+                  textColor: currentPage == 2 || currentPage == 5
+                      ? Colors.red
+                      : Colors.white,
                   gradient: currentPage != 2
                       ? LinearGradient(
                           colors: [
@@ -156,12 +172,12 @@ class _OrthostaticState extends State<Orthostatic> {
                   onPressed: currentPage == 1 || currentPage == 4
                       ? () => null
                       : () {
-                          if (currentPage != 2) {
+                          if (currentPage == 2 || currentPage == 5) {
+                            provider.stopTimer(Duration(minutes: 1));
                             _pageController.nextPage(
                                 duration: Duration(seconds: 1),
                                 curve: Curves.easeInOut);
                           } else {
-                            provider.stopTimer(Duration(minutes: 1));
                             _pageController.nextPage(
                                 duration: Duration(seconds: 1),
                                 curve: Curves.easeInOut);

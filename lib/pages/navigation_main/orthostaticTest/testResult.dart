@@ -21,7 +21,7 @@ class OrthostaticResult extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Heart(
-              height: constraints.maxHeight * 0.45 * diff,
+              height: constraints.maxHeight * 0.43 * diff,
               geometry: EdgeInsets.only(top: constraints.maxHeight * 0.05),
             ),
             Container(
@@ -58,17 +58,15 @@ class OrthostaticResult extends StatelessWidget {
               ),
             ),
             if (message != null)
-              FittedBox(
-                child: Container(
-                  margin: EdgeInsets.only(top: constraints.maxHeight * 0.1),
-                  child: Text(
-                    message!,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Color.fromRGBO(38, 38, 38, 1),
-                        fontWeight: FontWeight.w600,
-                        fontSize: 22),
-                  ),
+              Container(
+                margin: EdgeInsets.only(top: constraints.maxHeight * 0.07),
+                child: Text(
+                  message!,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Color.fromRGBO(38, 38, 38, 1),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 22),
                 ),
               )
           ],

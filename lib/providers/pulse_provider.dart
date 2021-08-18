@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_heart/helper/PulseWorker.dart';
 
@@ -19,10 +19,13 @@ class PulseProvider with ChangeNotifier {
           .toInt()
       : 72;
 
+  int get diff =>
+      complexTest.length == 2 ? (complexTest[1] - complexTest[0]).abs() : -100;
+
   void startTimer(Duration duration, Function() action) async {
     action();
-    if(complexTest.length == 2) {
-      
+    if (complexTest.length == 2) {
+      complexTest.clear();
     }
     _pulses.clear();
     final seconds = duration.inSeconds;
@@ -37,6 +40,7 @@ class PulseProvider with ChangeNotifier {
           _currentSeconds = timer.tick;
           if (timer.tick >= 30) {
             timer.cancel();
+            _worker.stop();
             print("pulse is ${pulse}");
             _timer = null;
             complexTest.add(pulse);
@@ -53,6 +57,7 @@ class PulseProvider with ChangeNotifier {
       _timer!.cancel();
       _timer = null;
       _worker.stop();
+      complexTest.add(pulse);
       print("pulse is ${pulse}");
       notifyListeners();
     }
