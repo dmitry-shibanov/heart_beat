@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_heart/pages/charts/barChart.dart';
-import 'package:flutter_heart/pages/charts/linearChart.dart';
+import 'package:flutter_heart/pages/navigation_main/charts/barChart.dart';
+import 'package:flutter_heart/pages/navigation_main/charts/linearChart.dart';
 
 class Charts extends StatefulWidget {
   @override

@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
-class Heart extends StatefulWidget {
-  @override
-  _HeartState createState() => _HeartState();
-}
+class Heart extends StatelessWidget {
+  final double? height;
+  final double? width;
+  final EdgeInsetsGeometry? geometry;
 
-class _HeartState extends State<Heart> {
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  Heart({this.height, this.width, this.geometry});
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: Image.asset('assets/images/full_heart.png'));
+    return Container(
+      margin: geometry,
+      child: Image.asset('assets/images/full_heart.png', fit: BoxFit.cover,),
+      height: this.height,
+      width: this.width,
+    );
   }
 }

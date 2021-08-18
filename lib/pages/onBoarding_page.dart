@@ -71,28 +71,27 @@ class _OnBoardingState extends State<OnBoarding> {
         backgroundColor: Colors.white10,
         elevation: 0.0,
         actions: [
-          currentPage == 5
-              ? Container(
-                  margin: EdgeInsets.symmetric(horizontal: 8.0),
-                  height: 15.0,
-                  decoration: ShapeDecoration(
-                    shape: StadiumBorder(),
-                  ),
-                  child: MaterialButton(
-                    height: 15.0,
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    shape: const StadiumBorder(),
-                    child: const Text(
-                      'Restore Purcheses',
-                      style: TextStyle(
-                          color: Color.fromRGBO(70, 70, 70, 1),
-                          fontSize: 13,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    onPressed: () async {},
-                  ),
-                )
-              : const SizedBox()
+          if (currentPage == 5)
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 8.0),
+              height: 15.0,
+              decoration: ShapeDecoration(
+                shape: StadiumBorder(),
+              ),
+              child: MaterialButton(
+                height: 15.0,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                shape: const StadiumBorder(),
+                child: const Text(
+                  'Restore Purcheses',
+                  style: TextStyle(
+                      color: Color.fromRGBO(70, 70, 70, 1),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400),
+                ),
+                onPressed: () async {},
+              ),
+            )
         ],
       ),
       body: Column(
@@ -128,20 +127,19 @@ class _OnBoardingState extends State<OnBoarding> {
               ],
             ),
           ),
-          currentPage == 5
-              ? Container(
-                  margin: EdgeInsets.only(bottom: 16.0),
-                  child: Text(
-                    'FREE unlimited access',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 17,
-                      color: Color.fromRGBO(38, 38, 38, 1),
-                    ),
-                  ),
-                )
-              : SizedBox(),
+          if (currentPage == 5)
+            Container(
+              margin: EdgeInsets.only(bottom: 16.0),
+              child: Text(
+                'FREE unlimited access',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 17,
+                  color: Color.fromRGBO(38, 38, 38, 1),
+                ),
+              ),
+            ),
           Container(
             width: double.infinity,
             margin: EdgeInsets.symmetric(horizontal: 16.0),
@@ -184,30 +182,29 @@ class _OnBoardingState extends State<OnBoarding> {
               },
             ),
           ),
-          currentPage == 5
-              ? Container(
-                  margin: EdgeInsets.only(right: 24.0, left: 24.0, top: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Privacy Policy',
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                            color: Color.fromRGBO(70, 70, 70, 1)),
-                      ),
-                      Text(
-                        'Terms Of Use',
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                            color: Color.fromRGBO(70, 70, 70, 1)),
-                      )
-                    ],
+          if (currentPage == 5)
+            Container(
+              margin: EdgeInsets.only(right: 24.0, left: 24.0, top: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Privacy Policy',
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: Color.fromRGBO(70, 70, 70, 1)),
                   ),
-                )
-              : SizedBox()
+                  Text(
+                    'Terms Of Use',
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: Color.fromRGBO(70, 70, 70, 1)),
+                  )
+                ],
+              ),
+            )
         ],
       ),
     );

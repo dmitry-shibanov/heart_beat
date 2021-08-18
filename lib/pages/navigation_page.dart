@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_heart/pages/charts/Charts.dart';
-import 'package:flutter_heart/pages/history_page.dart';
-import 'package:flutter_heart/pages/measure/measure_pulse.dart';
-import 'package:flutter_heart/pages/orthostaticTest/firstIntro.dart';
-import 'package:flutter_heart/pages/orthostaticTest/orthostaticTimer.dart';
+import 'package:flutter_heart/pages/navigation_main/charts/Charts.dart';
+import 'package:flutter_heart/pages/navigation_main/history_page.dart';
+import 'package:flutter_heart/pages/navigation_main/measure/measure_pulse.dart';
+import 'package:flutter_heart/pages/orthostatic.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
 class Intro extends StatefulWidget {
@@ -23,7 +22,7 @@ class _IntroState extends State<Intro> {
     MeasurePulse(),
     HistoryPage(),
     Charts(),
-    OrthostaticTimer()
+    Orthostatic()
   ];
   int currentPage = 0;
   int _bottomIndex = 0;

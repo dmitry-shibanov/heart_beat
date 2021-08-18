@@ -12,7 +12,7 @@ class SplashScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: EdgeInsets.only(bottom: 40.0),
+            padding: const EdgeInsets.only(bottom: 40.0),
             child: Heart(),
           ),
           Container(
@@ -20,7 +20,7 @@ class SplashScreen extends StatelessWidget {
             child: Text(
               'Heart Rate Monitor: bpm | bpm',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
             ),
           ),
         ],

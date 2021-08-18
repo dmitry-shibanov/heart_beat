@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_heart/db/database.dart';
-import 'package:flutter_heart/pages/main/intro_page.dart';
-import 'package:flutter_heart/pages/onBoarding.dart';
-import 'package:flutter_heart/pages/settings.dart';
-import 'package:flutter_heart/pages/splash.dart';
+import 'package:flutter_heart/pages/navigation_page.dart';
+import 'package:flutter_heart/pages/onBoarding_page.dart';
+import 'package:flutter_heart/pages/settings_page.dart';
+import 'package:flutter_heart/pages/splash_screen.dart';
 import 'package:flutter_heart/providers/data_helper.dart';
 import 'package:provider/provider.dart';
 

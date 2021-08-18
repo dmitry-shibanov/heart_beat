@@ -14,12 +14,11 @@ class SettingsPage extends StatelessWidget {
       appBar: AppBar(
         leading: BackButton(color: Colors.blue),
         backgroundColor: Colors.white,
-        // elevation: 0.0,
         title: Text(
           'Settings',
           style: TextStyle(color: Colors.black),
         ),
-      ), //Image.asset('assets/images/privacy.png')
+      ),
       body: Container(
         margin: EdgeInsets.only(right: 24.0, left: 24.0, top: 40.0),
         child: Column(

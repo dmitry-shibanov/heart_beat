@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SettingListItem extends StatelessWidget {
-  late Widget imageItem;
-  late String title;
+  late final Widget imageItem;
+  late final String title;
 
   SettingListItem({required this.imageItem, required this.title});
   @override
