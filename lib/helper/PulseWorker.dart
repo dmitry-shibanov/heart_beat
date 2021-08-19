@@ -21,7 +21,7 @@ class PulseWorker {
 
   Future<int?> current() async {
     if (kDebugMode) {
-      return Future.value(Random().nextInt(100));
+      return Future.value(60 + Random().nextInt(100 - 60));
     }
     return _platform
         .invokeMethod('current')

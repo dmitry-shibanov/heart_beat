@@ -3,9 +3,9 @@ import 'package:flutter_heart/components/settingsItem.dart';
 
 class SettingsPage extends StatelessWidget {
   final _map = {
-    'Term of Use': 'assets/images/term_of_use_group/info.png',
-    'Support': 'assets/images/help_group/help1.png',
-    'About app': 'assets/images/about_group/info1.png'
+    'Term of Use': 'assets/images/term_of_use.png',
+    'Support': 'assets/images/help.png',
+    'About app': 'assets/images/info.png'
   };
 
   @override
@@ -34,7 +34,7 @@ class SettingsPage extends StatelessWidget {
                       imageItem: Stack(
                         alignment: Alignment(0.0, 0.0),
                         children: [
-                          Image.asset('assets/images/about_group/layer.png'),
+                          Image.asset('assets/images/layer.png', scale: 3,),
                           Image.asset(entry.value)
                         ],
                       ),
@@ -52,8 +52,8 @@ class SettingsPage extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Image.asset(
-                            'assets/images/full_heart.png',
-                            scale: 1.5,
+                            'assets/images/smaller_heart.png',
+                            scale: 3,
                           ),
                           Container(
                             margin: EdgeInsets.only(bottom: 16, top: 32),

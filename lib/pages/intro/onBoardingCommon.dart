@@ -28,6 +28,7 @@ class OnBoardingCommon extends StatelessWidget {
           child: Image.asset(
             imageStr,
             width: double.infinity,
+            scale: 3,
             // height: 281,
             fit: BoxFit.cover,
           ),

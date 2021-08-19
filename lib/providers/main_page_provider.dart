@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MainProvider with ChangeNotifier {
   bool _isLeading = false;
   bool get isLeading => _isLeading;
-  Function? _action;
+  VoidCallback? _action;
 
   void action() {
     if (action != null) {
@@ -18,7 +18,7 @@ class MainProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setLeading(bool value, Function action) {
+  void setLeading(bool value, VoidCallback action) {
     _isLeading = value;
     _action = action;
     notifyListeners();

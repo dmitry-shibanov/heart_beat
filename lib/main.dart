@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_heart/db/database.dart';
 import 'package:flutter_heart/pages/navigation_page.dart';
 import 'package:flutter_heart/pages/onBoarding_page.dart';
@@ -10,6 +11,8 @@ import 'package:flutter_heart/providers/pulse_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MyApp());
 }
 

@@ -11,7 +11,7 @@ class Heart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: geometry,
-      child: Image.asset('assets/images/full_heart.png', fit: BoxFit.cover,),
+      child: Image.asset('assets/images/full_heart.png', fit: BoxFit.cover, scale: 3,),
       height: this.height,
       width: this.width,
     );

@@ -7,7 +7,7 @@ class Button extends StatelessWidget {
   late final double height;
   late final double elevation;
   late final EdgeInsetsGeometry? insetsGeometry;
-  late final void Function()? onPressed;
+  late final VoidCallback? onPressed;
 
   Button(
       {required this.gradient,
@@ -38,7 +38,9 @@ class Button extends StatelessWidget {
         child: Text(
           title,
           style: TextStyle(
-              color: textColor, fontSize: 17, fontWeight: FontWeight.w600),
+              color: textColor,
+              fontSize: 17 * MediaQuery.of(context).textScaleFactor,
+              fontWeight: FontWeight.w600),
         ),
         onPressed: onPressed,
       ),

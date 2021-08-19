@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_heart/components/button.dart';
 import 'package:flutter_heart/components/circlePainter.dart';
 import 'package:flutter_heart/helper/PulseWorker.dart';
+import 'package:flutter_heart/pages/navigation_main/measure/result_measure.dart';
+import 'package:flutter_heart/providers/pulse_provider.dart';
+import 'package:provider/provider.dart';
 
 class MeasurePulse extends StatefulWidget {
   @override
@@ -11,7 +15,9 @@ class MeasurePulse extends StatefulWidget {
 class _MeasurePulseState extends State<MeasurePulse>
     with SingleTickerProviderStateMixin {
   bool startMeasure = false;
+  final _pageController = PageController();
   bool startAnimation = false;
+  bool gotData = false;
   Widget sprite = SpriteDemo();
   final obj = new PulseWorker();
 
@@ -44,14 +50,70 @@ class _MeasurePulseState extends State<MeasurePulse>
     super.dispose();
   }
 
+  void onButtonPressed(PulseProvider provider) async {
+    try {
+      if (!startMeasure) {
+        // bool result = await obj.start();
+        // print("result start ${result}");
+        provider.startTimer(Duration(minutes: 1), () {
+          // _pageController.nextPage(
+          //     duration: Duration(seconds: 1), curve: Curves.easeInOut);
+          setState(() {
+            // gotData = true;
+          });
+        });
+      } else {
+        provider.stopTimer(Duration(minutes: 1));
+        print('came here');
+        setState(() {
+          gotData = true;
+        });
+        // _pageController.nextPage(
+        //     duration: Duration(seconds: 1), curve: Curves.easeInOut);
+      }
+    } catch (Exception) {
+      await showCupertinoDialog(
+          barrierDismissible: true,
+          context: context,
+          builder: (ctx) {
+            return CupertinoAlertDialog(
+              title: Text('No flashlight'),
+              content: Text('The device does not have a flashlight'),
+              actions: [
+                CupertinoDialogAction(
+                  isDefaultAction: true,
+                  child: Text('Ok'),
+                  onPressed: () => Navigator.pop(context, 1),
+                ),
+              ],
+            );
+          });
+      return;
+    }
+    setState(() {
+      if (!startMeasure) {
+        _controller.forward();
+      } else {
+        _controller.reverse();
+      }
+
+      startMeasure = !startMeasure;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<PulseProvider>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        !gotData ? Column(children: [
         Stack(
           alignment: Alignment(0.0, 0.0),
           children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 3,
+            ),
             FadeTransition(
               opacity: _animation,
               child: Image.asset('assets/images/pink_circle.png'),
@@ -60,120 +122,50 @@ class _MeasurePulseState extends State<MeasurePulse>
               child: sprite,
               visible: startAnimation,
             ),
-            Image.asset('assets/images/red_heart.png'),
+            Image.asset(
+              'assets/images/red_heart.png',
+              scale: 3,
+            ),
           ],
         ),
         SizedBox(height: 40.0),
-        Text(
-          'Put your finger on camera\n and flashlight',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 17,
-            color: Color.fromRGBO(70, 70, 70, 1),
-          ),
-        ),
+        startMeasure
+            ? Text(
+                'Do not remove your finger,\n measurement is in progress',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Color.fromRGBO(177, 177, 177, 1),
+                    fontSize: 17,
+                    fontWeight: FontWeight.w400),
+              )
+            : Text(
+                'Put your finger on camera\n and flashlight',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 17,
+                  color: Color.fromRGBO(70, 70, 70, 1),
+                ),
+              ),
+        ]) : Container(
+          height: MediaQuery.of(context).size.height * 0.7,
+          child:MeasureResult(provider.pulse),),
         Expanded(
           child: Align(
-            alignment: Alignment.bottomCenter,
-            child: 
-                 Container(
-                    width: double.infinity,
-                    margin:
-                        EdgeInsets.only(right: 16.0, left: 16.0, bottom: 16.0),
-                    height: 55.0,
-                    decoration: !startMeasure
-                        ? ShapeDecoration(
-                            shape: StadiumBorder(),
-                            gradient: LinearGradient(
-                              colors: [
-                                Color.fromRGBO(252, 90, 68, 1),
-                                Color.fromRGBO(196, 20, 50, 1)
-                              ],
-                            ),
-                          )
-                        : null,
-                    child: MaterialButton(
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      shape: StadiumBorder(),
-                      child: Text(
-                        'Start',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600),
+              alignment: Alignment.bottomCenter,
+              child: Button(
+                textColor: startMeasure || gotData ? Colors.red : Colors.white,
+                gradient: startMeasure || gotData
+                    ? null
+                    : LinearGradient(
+                        colors: [
+                          Color.fromRGBO(252, 90, 68, 1),
+                          Color.fromRGBO(196, 20, 50, 1)
+                        ],
                       ),
-                      onPressed: () async {
-                        try {
-                          if (!startMeasure) {
-                            bool result = await obj.start();
-                            print("result start ${result}");
-                          } else {
-                            bool? result = await obj.stop();
-                            int? current = await obj.current();
-
-                            print("result stop ${result}");
-                            print("result stop ${current}");
-                          }
-                        } catch (Exception) {
-                          await showCupertinoDialog(
-                              barrierDismissible: true,
-                              context: context,
-                              builder: (ctx) {
-                                return CupertinoAlertDialog(
-                                  title: Text('No flashlight'),
-                                  content: Text(
-                                      'The device does not have a flashlight'),
-                                  actions: [
-                                    CupertinoDialogAction(
-                                      isDefaultAction: true,
-                                      child: Text('Ok'),
-                                      onPressed: () =>
-                                          Navigator.pop(context, 1),
-                                    ),
-                                  ],
-                                );
-                              });
-                          return;
-                        }
-                        setState(() {
-                          if (!startMeasure) {
-                            _controller.forward();
-                          } else {
-                            _controller.reverse();
-                          }
-
-                          startMeasure = !startMeasure;
-                        });
-                      },
-                    ),
-                  )
-                // : Container(
-                //     width: double.infinity,
-                //     height: 55.0,
-                //     margin:
-                //         EdgeInsets.only(right: 16.0, left: 16.0, bottom: 16.0),
-                //     child: TextButton(
-                //       onPressed: () => null,
-                //       child: Text(
-                //         'Stop',
-                //         style: TextStyle(
-                //             color: Colors.red,
-                //             fontSize: 17,
-                //             fontWeight: FontWeight.w600),
-                //       ),
-                //       style: ButtonStyle(
-                //         shape:
-                //             MaterialStateProperty.all<RoundedRectangleBorder>(
-                //           RoundedRectangleBorder(
-                //             borderRadius: BorderRadius.circular(18.0),
-                //             side: BorderSide(color: Colors.red),
-                //           ),
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-          ),
+                title: startMeasure ? 'Stop' : gotData ? 'Restart' : 'Start',
+                onPressed: () => onButtonPressed(provider),
+              )),
         )
       ],
     );

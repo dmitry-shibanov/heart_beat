@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_heart/pages/navigation_main/charts/Charts.dart';
 import 'package:flutter_heart/pages/navigation_main/history_page.dart';
 import 'package:flutter_heart/pages/navigation_main/measure/measure_pulse.dart';
+import 'package:flutter_heart/pages/navigation_main/measure/result_measure.dart';
 import 'package:flutter_heart/pages/orthostatic.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 

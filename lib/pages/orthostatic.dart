@@ -120,7 +120,7 @@ class _OrthostaticState extends State<Orthostatic> {
                 //     .toString(),
               ),
               OrthostaticTimer(
-                imageAsset: 'assets/images/sand_clocks.png',
+                imageAsset: 'assets/images/hourglass.png',
                 action: (bool value) {
                   setDisabled(value);
                   provider.startTimer(

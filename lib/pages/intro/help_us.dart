@@ -27,8 +27,8 @@ class HelpUsPage extends StatelessWidget {
           child: Stack(
             alignment: Alignment(-1.0, 2.23),
             children: [
-              Image.asset('assets/images/Friend.png'),
-              Image.asset('assets/images/Emoji.png')
+              Image.asset('assets/images/Friend.png', scale: 3,),
+              Image.asset('assets/images/Emoji.png', scale: 3,)
             ],
           ),
         )

@@ -22,7 +22,7 @@ class PulseProvider with ChangeNotifier {
   int get diff =>
       complexTest.length == 2 ? (complexTest[1] - complexTest[0]).abs() : -100;
 
-  void startTimer(Duration duration, Function() action) async {
+  void startTimer(Duration duration, VoidCallback action) async {
     action();
     if (complexTest.length == 2) {
       complexTest.clear();

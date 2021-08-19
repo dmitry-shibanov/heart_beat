@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_heart/components/heart.dart';
 
 class FirstMeasure extends StatefulWidget {
-  Function() startMeasure;
+  VoidCallback startMeasure;
   FirstMeasure({required this.startMeasure});
   @override
   _FirstMeasureState createState() => _FirstMeasureState();

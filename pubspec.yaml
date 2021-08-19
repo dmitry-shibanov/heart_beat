@@ -63,6 +63,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/pink_circle.png
+    - assets/images/smaller_heart.png
     - assets/images/red_heart.png
     - assets/images/Emoji.png
     - assets/images/Friend.png
@@ -74,19 +75,14 @@ flutter:
     - assets/images/man_with_clocks.png
     - assets/images/privacy.png
     - assets/images/full_heart.png
-    - assets/images/sand_clocks.png
-    - assets/images/term_of_use_group/info.png
-    - assets/images/term_of_use_group/layer.png
-    - assets/images/about_group/info1.png
-    - assets/images/about_group/layer.png
-    - assets/images/help_group/help1.png
-    - assets/images/help_group/layer.png
-    - assets/images/Emoji_happy.svg
-    - assets/images/Emoji_normal.svg
-    - assets/images/Emoji_happy.svg
-    - assets/images/emojis/Emoji_happy.png
-    - assets/images/emojis/Emoji_normal.png
-    - assets/images/emojis/Emoji_happy.png
+    - assets/images/hourglass.png
+    - assets/images/term_of_use.png
+    - assets/images/layer.png
+    - assets/images/info.png
+    - assets/images/help.png
+    - assets/images/svg/Emoji_happy.svg
+    - assets/images/svg/Emoji_normal.svg
+    - assets/images/svg/Emoji_sad.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
