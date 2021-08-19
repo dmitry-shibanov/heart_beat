@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class HistoryPage extends StatelessWidget {
-  int count = 11;
+  int count = 0;
   @override
   Widget build(BuildContext context) {
     final dbHelper = Provider.of<DbHelper>(context);

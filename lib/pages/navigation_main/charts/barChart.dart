@@ -86,7 +86,8 @@ class BarChartSample1State extends State<BarChartSample1> {
     );
   }
 
-  List<BarChartGroupData> showingGroups() => List.generate(7, (i) {
+// 0 -> 7
+  List<BarChartGroupData> showingGroups() => List.generate(0, (i) {
         switch (i) {
           case 0:
             return makeGroupData(0, 95, isTouched: i == touchedIndex);

@@ -101,14 +101,14 @@ class LineChartCustom extends StatelessWidget {
         ),
         belowBarData: BarAreaData(show: false),
         spots: [
-          FlSpot(3, 87),
-          FlSpot(5, 83),
-          FlSpot(10, 100),
-          FlSpot(13, 105),
-          FlSpot(15, 100),
-          FlSpot(20, 77),
-          FlSpot(25, 85),
-          FlSpot(31, 83),
+          // FlSpot(3, 87),
+          // FlSpot(5, 83),
+          // FlSpot(10, 100),
+          // FlSpot(13, 105),
+          // FlSpot(15, 100),
+          // FlSpot(20, 77),
+          // FlSpot(25, 85),
+          // FlSpot(31, 83),
         ],
       );
 }
