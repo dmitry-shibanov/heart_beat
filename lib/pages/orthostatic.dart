@@ -65,6 +65,7 @@ class _OrthostaticState extends State<Orthostatic> {
       case 4:
         return "Start";
       case 2:
+      case 5:
         return "Stop";
       default:
         return "Get Results";
@@ -160,15 +161,14 @@ class _OrthostaticState extends State<Orthostatic> {
                   textColor: currentPage == 2 || currentPage == 5
                       ? Colors.red
                       : Colors.white,
-                  gradient: currentPage != 2
-                      ? LinearGradient(
+                  gradient: currentPage == 2 || currentPage == 5
+                      ? null: LinearGradient(
                           colors: [
                             Color.fromRGBO(
                                 252, 90, 68, _isDisabled ? 0.5 : 1.0),
                             Color.fromRGBO(196, 20, 50, _isDisabled ? 0.5 : 1.0)
                           ],
-                        )
-                      : null,
+                        ),
                   onPressed: currentPage == 1 || currentPage == 4
                       ? () => null
                       : () {
