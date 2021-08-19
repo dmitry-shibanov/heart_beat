@@ -34,5 +34,10 @@ jobs:
     - name: pub get
       run: flutter pub get
 
-    - name: Build project
-      run: flutter build
+    # - name: Build project android
+    #   if: ${{ matrix.os !=  macos-latest }}
+    #   run: flutter build apk
+
+    # - name: Build project ios
+    #   if: ${{ matrix.os ==  macos-latest }}
+    #   run: flutter build ios
