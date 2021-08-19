@@ -47,7 +47,9 @@ create table $tablePulse (
   }
 
   Future<int> insert(TestPulse pulse) async {
+    print("pulse.toMap() is ${pulse.toMap()}");
     int id = await _db.insert(tablePulse, pulse.toMap());
+    pulse.id = id;
     return id;
   }
 
@@ -64,12 +66,12 @@ create table $tablePulse (
   }
 
   Future<List<TestPulse>> getAllRecords() async {
-    List<TestPulse> recipes = (await _db.query(tablePulse)).map((item) {
-      TestPulse recipe = TestPulse.fromJson(item);
-      return recipe;
+    List<TestPulse> records = (await _db.query(tablePulse)).map((item) {
+      TestPulse record = TestPulse.fromJson(item);
+      return record;
     }).toList();
 
-    return recipes;
+    return records;
   }
 
   Future<int> delete(int id) async {
@@ -77,9 +79,9 @@ create table $tablePulse (
         .delete(tablePulse, where: '$columnId = ?', whereArgs: [id]);
   }
 
-  Future<int> update(TestPulse recipes) async {
-    return await _db.update(tablePulse, recipes.toMap(),
-        where: '$columnId = ?', whereArgs: [recipes.id]);
+  Future<int> update(TestPulse record) async {
+    return await _db.update(tablePulse, record.toMap(),
+        where: '$columnId = ?', whereArgs: [record.id]);
   }
 
   Future close() async => _db.close();

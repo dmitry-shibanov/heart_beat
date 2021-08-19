@@ -75,13 +75,13 @@ class _OrthostaticState extends State<Orthostatic> {
   String getMessage(PulseProvider provider) {
     final number = provider.diff;
     if (number <= 12) {
-      return 'The range from 0 to 12 beats indicates good fitness level';
+      return 'Good fitness level';
     } else if (number >= 13 && number < 18) {
-      return 'The difference of 13-18 beats shows a healthy, but not trained person';
+      return 'Healthy, but not trained personn';
     } else if (number >= 18 && number <= 25) {
-      return 'The range from 18 to 25 beats indicates a complete lack of physical fitness';
+      return 'Complete lack of physical fitness';
     } else {
-      return 'If the difference is more than 25 beats, then we can talk either about fatigue, or about a disease of the cardiovascular system or other health problems';
+      return 'Fatigue, or about a disease of the cardiovascular system or other health problems';
     }
   }
 

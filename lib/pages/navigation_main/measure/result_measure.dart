@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_heart/db/database.dart';
+import 'package:flutter_heart/providers/data_helper.dart';
 import 'package:flutter_heart/providers/pulse_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -34,104 +36,109 @@ class _MeasureResultState extends State<MeasureResult> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<PulseProvider>(context);
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/smaller_heart.png',
-              scale: 3,
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                  top: constraints.maxHeight * 0.05,
-                  bottom: constraints.maxHeight * 0.03),
-              child: Text(
-                'Your result',
-                style: TextStyle(
-                    color: Color.fromRGBO(70, 70, 70, 1),
-                    fontWeight: FontWeight.w400,
-                    fontSize: 17),
+    return Consumer2<PulseProvider, DbHelper>(
+        builder: (context, pulseProvider, db, child) {
+          print("last record is ${db.getLastRecord.toMap().toString()}");
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/smaller_heart.png',
+                scale: 3,
               ),
-            ),
-            FittedBox(
-              child: Container(
+              Container(
+                margin: EdgeInsets.only(
+                    top: constraints.maxHeight * 0.05,
+                    bottom: constraints.maxHeight * 0.03),
                 child: Text(
-                  provider.pulse.toString(),
+                  'Your result',
                   style: TextStyle(
-                      color: Color.fromRGBO(38, 38, 38, 1),
-                      fontWeight: FontWeight.w800,
-                      fontSize: 72),
+                      color: Color.fromRGBO(70, 70, 70, 1),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 17),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.only(bottom: constraints.maxHeight * 0.1),
-              child: Text(
-                'bpm',
+              FittedBox(
+                child: Container(
+                  child: Text(
+                    provider.pulse.toString(),
+                    // textScaleFactor : 0.5,
+                    style: TextStyle(
+                        color: Color.fromRGBO(38, 38, 38, 1),
+                        fontWeight: FontWeight.w800,
+                        fontSize: 72),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(bottom: constraints.maxHeight * 0.1),
+                child: Text(
+                  'bpm',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w400,
+                      color: Color.fromRGBO(138, 138, 138, 1)),
+                ),
+              ),
+              Text(
+                'How is your mood?',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w400,
-                    color: Color.fromRGBO(138, 138, 138, 1)),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 22,
+                  color: Color.fromRGBO(38, 38, 38, 1),
+                ),
               ),
-            ),
-            Text(
-              'How is your mood?',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 22,
-                color: Color.fromRGBO(38, 38, 38, 1),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                top: constraints.maxHeight * 0.04,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ...mood
-                      .asMap()
-                      .map<int, Widget>((index, imageStr) {
-                        return MapEntry(
-                            index,
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  currentMood = index;
-                                });
-                              },
-                              child: Container(
-                                height: MediaQuery.of(context).size.width / 5,
-                                width: MediaQuery.of(context).size.width / 5,
-                                child: Align(
-                                  alignment: Alignment(0.0, 1.0),
-                                  child: Container(
-                                    height:
-                                        MediaQuery.of(context).size.width / 6,
-                                    width:
-                                        MediaQuery.of(context).size.width / 6,
-                                    child: SvgPicture.asset(
-                                      imageStr,
-                                      fit: BoxFit.fill,
+              Container(
+                margin: EdgeInsets.only(
+                  top: constraints.maxHeight * 0.04,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ...mood
+                        .asMap()
+                        .map<int, Widget>((index, imageStr) {
+                          return MapEntry(
+                              index,
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    currentMood = index;
+                                  });
+                                },
+                                child: Container(
+                                  height: MediaQuery.of(context).size.width / 5,
+                                  width: MediaQuery.of(context).size.width / 5,
+                                  child: Align(
+                                    alignment: Alignment(0.0, 1.0),
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.width / 6,
+                                      width:
+                                          MediaQuery.of(context).size.width / 6,
+                                      child: SvgPicture.asset(
+                                        imageStr,
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
                                   ),
+                                  decoration: getLayer(index),
                                 ),
-                                decoration: getLayer(index),
-                              ),
-                            ));
-                      })
-                      .values
-                      .toList(),
-                ],
-              ),
-            )
-          ],
-        );
-      },
-    );
+                              ));
+                        })
+                        .values
+                        .toList(),
+                  ],
+                ),
+              )
+            ],
+          );
+        },
+      );
+    });
   }
 }

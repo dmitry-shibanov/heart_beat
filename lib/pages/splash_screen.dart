@@ -4,6 +4,7 @@ import 'package:flutter_heart/components/heart.dart';
 class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print("MediaQuery.of(context).textScaleFactor is ${MediaQuery.of(context).textScaleFactor}");
     return Scaffold(
       body: Center(
           child: Column(

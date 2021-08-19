@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_heart/models/TestPulse.dart';
 import 'package:flutter_heart/providers/data_helper.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class HistoryPage extends StatelessWidget {
-  int count = 11;
   @override
   Widget build(BuildContext context) {
     final dbHelper = Provider.of<DbHelper>(context);
@@ -14,12 +15,14 @@ class HistoryPage extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.0),
       child: ListView.builder(
-          itemBuilder: (ctx, index) => itemBuilder(ctx, index),
-          itemCount: count),
+          itemBuilder: (ctx, index) =>
+              itemBuilder(ctx, records[index], dbHelper),
+          itemCount: records.length),
     );
   }
 
-  Widget itemBuilder(BuildContext context, int index) {
+  Widget itemBuilder(BuildContext context, TestPulse pulse, DbHelper dbHelper) {
+    DateTime dateTime = pulse.date;
     return Card(
         child: Container(
             padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -33,16 +36,16 @@ class HistoryPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Title",
+                        "${DateFormat.MMM().format(dateTime)} ${DateFormat.d().format(dateTime)}",
                         style: TextStyle(color: Colors.black, fontSize: 16.0),
                       ),
                       Text(
-                        'Sub Title',
+                        '${DateFormat('hh:mm a').format(dateTime)}',
                         style: TextStyle(color: Colors.black, fontSize: 14.0),
                       ),
                     ]),
                 Text(
-                  'Result',
+                  pulse.metric.toString(),
                   style: TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.bold,
@@ -64,12 +67,15 @@ class HistoryPage extends StatelessWidget {
                             actions: [
                               CupertinoDialogAction(
                                 child: Text('Cancel'),
-                                onPressed: () => Navigator.pop(context, 0),
+                                onPressed: () => Navigator.pop(context),
                               ),
                               CupertinoDialogAction(
                                 isDefaultAction: true,
                                 child: Text('Delete'),
-                                onPressed: () => Navigator.pop(context, 1),
+                                onPressed: () {
+                                  dbHelper.removeRecord(pulse: pulse);
+                                  Navigator.pop(context);
+                                },
                               ),
                             ],
                           );

@@ -22,12 +22,12 @@ class OrthostaticResult extends StatelessWidget {
           children: [
             Heart(
               height: constraints.maxHeight * 0.43 * diff,
-              geometry: EdgeInsets.only(top: constraints.maxHeight * 0.05),
+              geometry: EdgeInsets.only(top: constraints.maxHeight * 0.04),
             ),
             Container(
               margin: EdgeInsets.only(
                   top: constraints.maxHeight * 0.1 * diff,
-                  bottom: constraints.maxHeight * 0.04 * diff),
+                  bottom: constraints.maxHeight * 0.03 * diff),
               child: Text(
                 'Your result',
                 style: TextStyle(
@@ -58,7 +58,7 @@ class OrthostaticResult extends StatelessWidget {
               ),
             ),
             if (message != null)
-              Container(
+              FittedBox(child:Container(
                 margin: EdgeInsets.only(top: constraints.maxHeight * 0.07),
                 child: Text(
                   message!,
@@ -68,7 +68,7 @@ class OrthostaticResult extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       fontSize: 22),
                 ),
-              )
+              ),)
           ],
         );
       },

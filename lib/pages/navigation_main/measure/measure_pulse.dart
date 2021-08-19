@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_heart/components/button.dart';
 import 'package:flutter_heart/components/circlePainter.dart';
+import 'package:flutter_heart/db/database.dart';
 import 'package:flutter_heart/helper/PulseWorker.dart';
+import 'package:flutter_heart/models/TestPulse.dart';
 import 'package:flutter_heart/pages/navigation_main/measure/result_measure.dart';
+import 'package:flutter_heart/providers/data_helper.dart';
 import 'package:flutter_heart/providers/pulse_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -50,7 +53,7 @@ class _MeasurePulseState extends State<MeasurePulse>
     super.dispose();
   }
 
-  void onButtonPressed(PulseProvider provider) async {
+  void onButtonPressed(PulseProvider provider, DbHelper db) async {
     try {
       if (!startMeasure) {
         // bool result = await obj.start();
@@ -65,6 +68,14 @@ class _MeasurePulseState extends State<MeasurePulse>
       } else {
         provider.stopTimer(Duration(minutes: 1));
         print('came here');
+
+        final map = {
+          "image": 1,
+          "date": DateTime.now().microsecondsSinceEpoch,
+          "metric": provider.pulse
+        };
+        TestPulse pules = TestPulse.fromJson(map);
+        db.addRecord(pules);
         setState(() {
           gotData = true;
         });
@@ -104,6 +115,7 @@ class _MeasurePulseState extends State<MeasurePulse>
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<PulseProvider>(context);
+    final db = Provider.of<DbHelper>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -164,7 +176,7 @@ class _MeasurePulseState extends State<MeasurePulse>
                         ],
                       ),
                 title: startMeasure ? 'Stop' : gotData ? 'Restart' : 'Start',
-                onPressed: () => onButtonPressed(provider),
+                onPressed: () => onButtonPressed(provider, db),
               )),
         )
       ],

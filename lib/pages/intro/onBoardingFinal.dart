@@ -28,28 +28,32 @@ class OnBoardingFinal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Heart(),
-        SizedBox(
-          height: 72.0,
-        ),
-        ...(points
-            .map(
-              (e) => Container(
-                margin: EdgeInsets.only(left: 16),
-                child: ListTile(
-                  minLeadingWidth: 15,
-                  leading: checkIcon,
-                  title: Text(
-                    e,
-                    style: listStyle,
+    return LayoutBuilder(builder: (context, constraints) {
+      return Column(
+        children: [
+          Heart(
+            height: constraints.maxHeight * 0.4,
+          ),
+          SizedBox(
+            height: constraints.maxHeight * 0.1,
+          ),
+          ...(points
+              .map(
+                (e) => Container(
+                  margin: EdgeInsets.only(left: 16),
+                  child: ListTile(
+                    minLeadingWidth: 15,
+                    leading: checkIcon,
+                    title: Text(
+                      e,
+                      style: listStyle,
+                    ),
                   ),
                 ),
-              ),
-            )
-            .toList()),
-      ],
-    );
+              )
+              .toList()),
+        ],
+      );
+    });
   }
 }

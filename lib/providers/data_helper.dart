@@ -19,17 +19,13 @@ class DbHelper with ChangeNotifier {
     notifyListeners();
   }
 
-  // _incrementCounter() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   int introPage = (prefs.getInt('introPage') ?? 0);
-  //   return introPage;
-  // }
-
   TestPulse getRecord(int id) {
     final pules = _userRecords!.firstWhere((element) => element.id == id);
 
     return pules;
   }
+
+  TestPulse get getLastRecord => _userRecords!.last;
 
   List<TestPulse> get records => [..._userRecords!];
 
@@ -48,6 +44,7 @@ class DbHelper with ChangeNotifier {
 
     _userRecords!.removeWhere((element) => element.id == id);
     notifyListeners();
+    print("id is ${id}");
     _provider!.delete(id!);
   }
 }

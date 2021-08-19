@@ -12,7 +12,7 @@ class OrthostaticTestResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 24.0),
+      margin: EdgeInsets.symmetric(horizontal: 12.0),
       child: Column(
         children: [
           ...points

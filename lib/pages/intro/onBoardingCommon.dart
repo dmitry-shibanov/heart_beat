@@ -8,32 +8,36 @@ class OnBoardingCommon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 24.0),
-          child: Text(
-            content,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w600,
-              color: Color.fromRGBO(38, 38, 38, 1),
+    return LayoutBuilder(builder: (context, constraints) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            height: constraints.maxHeight * 0.3,
+            margin: EdgeInsets.symmetric(horizontal: 24.0),
+            child: Text(
+              content,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
+                color: Color.fromRGBO(38, 38, 38, 1),
+              ),
             ),
           ),
-        ),
-        Container(
-          margin: EdgeInsets.only(right: 52, left: 42, top: 50),
-          child: Image.asset(
-            imageStr,
-            width: double.infinity,
-            scale: 3,
-            // height: 281,
-            fit: BoxFit.cover,
-          ),
-        )
-      ],
-    );
+          Container(
+            height: constraints.maxHeight * 0.5,
+            margin: EdgeInsets.only(right: 52, left: 42, top: 50),
+            child: Image.asset(
+              imageStr,
+              width: double.infinity,
+              scale: 3,
+              // height: 281,
+              fit: BoxFit.cover,
+            ),
+          )
+        ],
+      );
+    });
   }
 }

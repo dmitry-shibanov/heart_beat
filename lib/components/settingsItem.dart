@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 class SettingListItem extends StatelessWidget {
   late final Widget imageItem;
   late final String title;
+  late final double height;
 
-  SettingListItem({required this.imageItem, required this.title});
+  SettingListItem(
+      {required this.imageItem, required this.title, this.height = 72.0});
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -13,7 +15,7 @@ class SettingListItem extends StatelessWidget {
         onTap: () => null,
         child: Container(
           alignment: Alignment.center,
-          height: 72.0,
+          height: height,
           child: ListTile(
             leading: this.imageItem,
             title: Text(
