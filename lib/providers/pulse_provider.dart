@@ -35,7 +35,7 @@ class PulseProvider with ChangeNotifier {
           print(value);
           _pulses.add(value);
           _currentSeconds = timer.tick;
-          if (timer.tick >= 30) {
+          if (timer.tick >= 15) {
             timer.cancel();
             _worker.stop();
             print("pulse is ${pulse}");
