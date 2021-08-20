@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_heart/components/button.dart';
 import 'package:flutter_heart/components/circlePainter.dart';
-import 'package:flutter_heart/db/database.dart';
-import 'package:flutter_heart/helper/PulseWorker.dart';
 import 'package:flutter_heart/models/TestPulse.dart';
 import 'package:flutter_heart/pages/navigation_main/measure/result_measure.dart';
 import 'package:flutter_heart/providers/data_helper.dart';
@@ -11,7 +9,7 @@ import 'package:flutter_heart/providers/pulse_provider.dart';
 import 'package:provider/provider.dart';
 
 class MeasurePulse extends StatefulWidget {
-  Function(VoidCallback?) parentCb;
+  final Function(VoidCallback?) parentCb;
 
   MeasurePulse(this.parentCb);
 
@@ -53,8 +51,8 @@ class _MeasurePulseState extends State<MeasurePulse>
           startAnimation = true; //!startAnimation;
         });
       } else if (AnimationStatus.reverse == status) {
-                print("startAnimation reverse is ${startAnimation}");
-        startAnimation = false;//!startAnimation;
+        print("startAnimation reverse is ${startAnimation}");
+        startAnimation = false; //!startAnimation;
       }
     });
   }
@@ -79,7 +77,6 @@ class _MeasurePulseState extends State<MeasurePulse>
     try {
       if (!gotData) {
         if (!startMeasure) {
-          
           provider.startTimer(Duration(minutes: 1), () {
             collectPulseData(provider, db);
             widget.parentCb(resetData);
@@ -115,6 +112,7 @@ class _MeasurePulseState extends State<MeasurePulse>
         });
       }
     } catch (Exception) {
+      print('came to exception');
       await showCupertinoDialog(
           barrierDismissible: true,
           context: context,

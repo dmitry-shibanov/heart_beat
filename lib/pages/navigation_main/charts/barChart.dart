@@ -3,8 +3,16 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_heart/models/TestPulse.dart';
+import 'package:flutter_heart/providers/data_helper.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class BarChartSample1 extends StatefulWidget {
+class BarChartCustom extends StatefulWidget {
+  DateTime start;
+  DateTime finish;
+  BarChartCustom({required this.start, required this.finish});
+
   final List<Color> availableColors = [
     Colors.purpleAccent,
     Colors.yellow,
@@ -15,10 +23,10 @@ class BarChartSample1 extends StatefulWidget {
   ];
 
   @override
-  State<StatefulWidget> createState() => BarChartSample1State();
+  State<StatefulWidget> createState() => BarChartCustomState();
 }
 
-class BarChartSample1State extends State<BarChartSample1> {
+class BarChartCustomState extends State<BarChartCustom> {
   final Color barBackgroundColor = const Color(0xff72d8bf);
   final Duration animDuration = const Duration(milliseconds: 250);
 
@@ -45,9 +53,13 @@ class BarChartSample1State extends State<BarChartSample1> {
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: BarChart(
-                        mainBarData(),
-                        swapAnimationDuration: animDuration,
+                      child: Consumer<DbHelper>(
+                        builder: (context, db, widget) {
+                          return BarChart(
+                            mainBarData(db),
+                            swapAnimationDuration: animDuration,
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -86,28 +98,49 @@ class BarChartSample1State extends State<BarChartSample1> {
     );
   }
 
-  List<BarChartGroupData> showingGroups() => List.generate(0, (i) {
-        switch (i) {
-          case 0:
-            return makeGroupData(0, 95, isTouched: i == touchedIndex);
-          case 1:
-            return makeGroupData(1, 80, isTouched: i == touchedIndex);
-          case 2:
-            return makeGroupData(2, 90, isTouched: i == touchedIndex);
-          case 3:
-            return makeGroupData(3, 85, isTouched: i == touchedIndex);
-          case 4:
-            return makeGroupData(4, 103, isTouched: i == touchedIndex);
-          case 5:
-            return makeGroupData(5, 75, isTouched: i == touchedIndex);
-          case 6:
-            return makeGroupData(6, 83, isTouched: i == touchedIndex);
-          default:
-            return throw Error();
+  Map<int, double> createProperDataSet(
+      DateTime first, DateTime second, List<TestPulse> records) {
+    List<int> days = List.generate(7, (index) => 0);
+    print(
+        "DateFormat.d().format(records[0].date) is ${DateFormat.d().format(records[0].date)}");
+    Map<int, double> results = {};
+    records.forEach((e) {
+      print(DateFormat.d().format(e.date));
+      if (e.date.microsecondsSinceEpoch >= first.microsecondsSinceEpoch &&
+          e.date.microsecondsSinceEpoch <= second.microsecondsSinceEpoch) {
+        print('came here');
+        if (results.containsKey(e.date.weekday)) {
+          results.update(e.date.weekday, (value) => value + e.metric);
+        } else {
+          results[e.date.weekday] = e.metric.toDouble();
         }
-      });
+        days[e.date.weekday - 1] += 1;
+      }
+    });
 
-  BarChartData mainBarData() {
+    final finalMap = results.map((key, value) {
+      return new MapEntry(key, value / days[key - 1]);
+    });
+
+    return finalMap;
+  }
+
+  List<BarChartGroupData> showingGroups(Map<int, double> map) {
+    print(DateTime.now().weekday);
+    final keys = map.keys.toList();
+    return List.generate(7, (i) {
+      if (keys.contains(i + 1)) {
+        double value = map[i + 1]!;
+        return makeGroupData(i, value, isTouched: i == touchedIndex);
+      }
+      return makeGroupData(i, 0, isTouched: i == touchedIndex);
+    });
+  }
+
+  BarChartData mainBarData(DbHelper db) {
+    final records = db.records;
+    final dataSet = createProperDataSet(widget.start, widget.finish, records);
+    print("dataSet is ${dataSet}");
     return BarChartData(
       maxY: 150,
       gridData: FlGridData(
@@ -216,7 +249,7 @@ class BarChartSample1State extends State<BarChartSample1> {
       borderData: FlBorderData(
         show: false,
       ),
-      barGroups: showingGroups(),
+      barGroups: showingGroups(dataSet),
     );
   }
 

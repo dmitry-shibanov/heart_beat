@@ -1,32 +1,102 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_heart/models/TestPulse.dart';
+import 'package:flutter_heart/providers/data_helper.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class LineChartCustom extends StatelessWidget {
-  const LineChartCustom({required this.isShowingMainData});
-
+  const LineChartCustom(
+      {required this.isShowingMainData,
+      required this.time,
+      required this.isMonth});
+  final DateTime time;
   final bool isShowingMainData;
+  final bool isMonth;
 
   @override
   Widget build(BuildContext context) {
-    return LineChart(
-      sampleData1,
-      swapAnimationDuration: const Duration(milliseconds: 250),
-    );
+    return Consumer<DbHelper>(builder: (context, db, child) {
+      final records = db.records;
+      late final points;
+      if (isMonth) {
+        points = createProperDataSetMonth(time, records);
+      } else {
+        points = createProperDataSetYear(time, records);
+      }
+
+      return LineChart(
+        sampleData(points),
+        swapAnimationDuration: const Duration(milliseconds: 250),
+      );
+    });
   }
 
-  LineChartData get sampleData1 => LineChartData(
-        lineTouchData: lineTouchData1,
+  Map<int, double> createProperDataSetMonth(
+      DateTime first, List<TestPulse> records) {
+    final lastDay = DateTime(time.year, time.month + 1, 0).day;
+    final second = DateTime(time.year, time.month, lastDay);
+    List<int> days = List.generate(lastDay, (index) => 0);
+    Map<int, double> results = {};
+    records.forEach((e) {
+      print(DateFormat.d().format(e.date));
+      if (e.date.microsecondsSinceEpoch >= first.microsecondsSinceEpoch &&
+          e.date.microsecondsSinceEpoch <= second.microsecondsSinceEpoch) {
+        if (results.containsKey(e.date.day)) {
+          results.update(e.date.day, (value) => value + e.metric);
+        } else {
+          results[e.date.day] = e.metric.toDouble();
+        }
+        days[e.date.day - 1] += 1;
+      }
+    });
+
+    final finalMap = results.map((key, value) {
+      return new MapEntry(key, value / days[key - 1]);
+    });
+
+    return finalMap;
+  }
+
+  Map<int, double> createProperDataSetYear(
+      DateTime first, List<TestPulse> records) {
+    final lastMonth = 12;
+    final second = DateTime(time.year, lastMonth, 31);
+    List<int> months = List.generate(lastMonth, (index) => 0);
+    Map<int, double> results = {};
+    records.forEach((e) {
+      print(DateFormat.d().format(e.date));
+      if (e.date.microsecondsSinceEpoch >= first.microsecondsSinceEpoch &&
+          e.date.microsecondsSinceEpoch <= second.microsecondsSinceEpoch) {
+        if (results.containsKey(e.date.month)) {
+          results.update(e.date.month, (value) => value + e.metric);
+        } else {
+          results[e.date.month] = e.metric.toDouble();
+        }
+        months[e.date.month - 1] += 1;
+      }
+    });
+
+    final finalMap = results.map((key, value) {
+      return new MapEntry(key, value / months[key - 1]);
+    });
+
+    return finalMap;
+  }
+
+  LineChartData sampleData(Map<int, double> points) => LineChartData(
+        lineTouchData: lineTouchData,
         gridData: gridData,
-        titlesData: titlesData1,
+        titlesData: titlesData,
         borderData: borderData,
-        lineBarsData: lineBarsData1,
+        lineBarsData: lineBarsData(points),
         minX: 0,
-        maxX: 32,
+        maxX: this.isMonth ? 32 : 13,
         maxY: 150,
         minY: -10,
       );
 
-  LineTouchData get lineTouchData1 => LineTouchData(
+  LineTouchData get lineTouchData => LineTouchData(
         touchCallback: (LineTouchResponse touchResponse) {},
         handleBuiltInTouches: true,
         touchTooltipData: LineTouchTooltipData(
@@ -34,7 +104,7 @@ class LineChartCustom extends StatelessWidget {
         ),
       );
 
-  FlTitlesData get titlesData1 => FlTitlesData(
+  FlTitlesData get titlesData => FlTitlesData(
         bottomTitles: bottomTitles,
         leftTitles: leftTitles(
           getTitles: (value) {
@@ -47,7 +117,8 @@ class LineChartCustom extends StatelessWidget {
         ),
       );
 
-  List<LineChartBarData> get lineBarsData1 => [lineChartBarData1_1];
+  List<LineChartBarData> lineBarsData(Map<int, double> points) =>
+      [lineChartBarData(points)];
 
   SideTitles leftTitles({required GetTitleFunction getTitles}) => SideTitles(
         getTitles: getTitles,
@@ -71,10 +142,31 @@ class LineChartCustom extends StatelessWidget {
           fontSize: 10,
         ),
         getTitles: (value) {
-          if (value == 1.0 || value == 31.0) {
-            return value.toInt().toString();
-          } else if (value > 0 && value != 30 && value.toInt() % 5 == 0) {
-            return value.toInt().toString();
+          final months = [
+            '',
+            'JAN',
+            'FEB',
+            'MAR',
+            'APR',
+            'MAY',
+            'JUNE',
+            'JULY',
+            'AUG',
+            'SEPT',
+            'OCT',
+            'NOV',
+            'DEC',
+            '',
+            '',
+          ];
+          if (this.isMonth) {
+            if (value == 1.0 || value == 31.0) {
+              return value.toInt().toString();
+            } else if (value > 0 && value != 30 && value.toInt() % 5 == 0) {
+              return value.toInt().toString();
+            }
+          } else {
+            return months[value.toInt()];
           }
           return '';
         },
@@ -89,18 +181,25 @@ class LineChartCustom extends StatelessWidget {
       show: false,
       border: Border.all(color: const Color(0xff37434d), width: 1));
 
-  LineChartBarData get lineChartBarData1_1 => LineChartBarData(
+  LineChartBarData lineChartBarData(Map<int, double> points) =>
+      LineChartBarData(
         isCurved: true,
         colors: [const Color.fromRGBO(196, 20, 50, 1)],
         barWidth: 2,
         isStrokeCapRound: true,
         dotData: FlDotData(
           show: true,
+          checkToShowDot: (spot, barData) {
+            return this.isMonth ? spot.x % 5 == 0 : true;
+          },
           getDotPainter: (spot, percent, barData, index) =>
               FlDotCirclePainter(radius: 4, color: Colors.redAccent),
         ),
         belowBarData: BarAreaData(show: false),
         spots: [
+          ...points.entries.map((e) {
+            return FlSpot(e.key.toDouble(), e.value);
+          }).toList()
           // FlSpot(3, 87),
           // FlSpot(5, 83),
           // FlSpot(10, 100),
@@ -113,12 +212,15 @@ class LineChartCustom extends StatelessWidget {
       );
 }
 
-class LineChartSample1 extends StatefulWidget {
+class LineChartSample extends StatefulWidget {
+  final DateTime time;
+  final bool isMonth;
+  LineChartSample(this.time, this.isMonth);
   @override
-  State<StatefulWidget> createState() => LineChartSample1State();
+  State<StatefulWidget> createState() => LineChartSampleState();
 }
 
-class LineChartSample1State extends State<LineChartSample1> {
+class LineChartSampleState extends State<LineChartSample> {
   late bool isShowingMainData;
 
   @override
@@ -149,8 +251,11 @@ class LineChartSample1State extends State<LineChartSample1> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(right: 16.0, left: 6.0),
-                    child:
-                        LineChartCustom(isShowingMainData: isShowingMainData),
+                    child: LineChartCustom(
+                      isShowingMainData: isShowingMainData,
+                      time: widget.time,
+                      isMonth: widget.isMonth,
+                    ),
                   ),
                 ),
                 const SizedBox(

@@ -13,25 +13,56 @@ class Charts extends StatefulWidget {
 class _ChartsState extends State<Charts> {
   int groupValue = 0;
   Map<int, Widget> _map = {0: Text('week'), 1: Text('month'), 2: Text('year')};
-  List<int> multiPly = [1, 1, 1];
+  List<int> multiPly = [0, 0, 0];
+  late DateTime first;
+  late DateTime second;
+  late DateTime yearDate;
+  late DateTime monthDate;
+
+  _ChartsState() {
+    var now = DateTime.now();
+    var start = now.subtract(Duration(days: now.weekday - 1));
+    first = start.add(Duration(days: 7));
+    second = first.subtract(Duration(days: 7));
+    yearDate = DateTime(now.year + multiPly[2], 1, 1);
+    monthDate = DateTime(now.year, now.month + multiPly[1], 1);
+  }
 
   String getTitle() {
     switch (groupValue) {
       case 0:
-        var firstDate = DateFormat.d().format(DateTime.now());
-        var secondDate =
-            DateFormat.d().format(DateTime.now().add(Duration(days: 7)));
+        var now = DateTime.now();
+        final start = now.subtract(Duration(days: now.weekday - 1));
+        setState(() {
+          first = start.add(Duration(days: (multiPly[0] + 1) * 7));
+          second = first.subtract(Duration(days: 7));
+        });
 
-        var firstMonth = DateFormat.MMM().format(DateTime.now());
-        var secondMonth =
-            DateFormat.MMM().format(DateTime.now().add(Duration(days: 7)));
+        var firstDate = DateFormat.d().format(first);
+        var secondDate = DateFormat.d().format(second);
 
-        return "${firstDate} ${firstMonth} - ${secondDate} ${secondMonth}";
+        var firstMonth = DateFormat.MMM().format(first);
+        var secondMonth = DateFormat.MMM().format(second);
+
+        return "${secondDate} ${secondMonth} - ${firstDate} ${firstMonth}";
       case 1:
-        return  DateFormat.MMM().format(DateTime.now());
+        final now = DateTime.now();
+        // int firstDay = DateTime()
+        //         int lastday = DateTime(now.year, now.month - 5, 0).day; february
+        // int lastday = DateTime(now.year, now.month - 5, 0).day;
+        // print(lastday);
+        // int current
+        setState(() {
+          monthDate = DateTime(now.year, now.month + multiPly[1], 1);
+        });
+        return DateFormat.MMM().format(monthDate);
       case 2:
-        return DateFormat.y().format(DateTime.now());
-        default: 
+        final now = DateTime.now();
+        setState(() {
+          yearDate = DateTime(now.year + multiPly[2], 1, 1);
+        });
+        return DateFormat.y().format(yearDate);
+      default:
         return "";
     }
   }
@@ -49,7 +80,7 @@ class _ChartsState extends State<Charts> {
             onValueChanged: (number) {
               setState(() {
                 groupValue = number!;
-                multiPly = [1, 1, 1];
+                // multiPly = [1, 1, 1];
               });
             },
             groupValue: groupValue,
@@ -63,13 +94,19 @@ class _ChartsState extends State<Charts> {
               Text(getTitle()),
               Row(children: [
                 IconButton(
-                  icon: Icon(AntDesign.arrowleft),
-                  onPressed: () => multiPly[groupValue]--,
-                ),
+                    icon: Icon(AntDesign.arrowleft),
+                    onPressed: () {
+                      setState(() {
+                        multiPly[groupValue]--;
+                      });
+                    }),
                 IconButton(
-                  icon: Icon(AntDesign.arrowright),
-                  onPressed: () => multiPly[groupValue]++,
-                )
+                    icon: Icon(AntDesign.arrowright),
+                    onPressed: () {
+                      setState(() {
+                        multiPly[groupValue]++;
+                      });
+                    })
               ])
             ],
           ),
@@ -81,10 +118,10 @@ class _ChartsState extends State<Charts> {
 
   loadGraph() {
     if (groupValue == 0) {
-      return BarChartSample1();
+      return BarChartCustom(start: second, finish: first);
     } else if (groupValue == 1) {
-      return LineChartSample1();
+      return LineChartSample(monthDate, true);
     }
-    return LineChartSample1();
+    return LineChartSample(yearDate, false);
   }
 }
