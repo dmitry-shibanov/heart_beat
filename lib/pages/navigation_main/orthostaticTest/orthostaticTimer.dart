@@ -32,8 +32,8 @@ class _OrthostaticTimerState extends State<OrthostaticTimer>
               child: Image.asset(widget.imageAsset),
             ),
             TweenAnimationBuilder<Duration>(
-                duration: Duration(minutes: 1),
-                tween: Tween(begin: Duration(minutes: 1), end: Duration.zero),
+                duration: Duration(seconds: 30),
+                tween: Tween(begin: Duration(seconds: 30), end: Duration.zero),
                 onEnd: () {
                   widget.action(false);
                 },
