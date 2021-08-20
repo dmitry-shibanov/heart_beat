@@ -17,16 +17,16 @@ class _OnBoardingState extends State<OnBoarding> {
     OnBoardingOne(),
     HelpUsPage(),
     OnBoardingCommon(
-      imageStr: 'assets/images/green_man.png',
+      imageStr: 'assets/images/gif/green_man.json',
       content: 'Hold your finger on the camera lens and the flashlight',
     ),
     OnBoardingCommon(
-      imageStr: 'assets/images/run_man.png',
+      imageStr: 'assets/images/gif/run_man.json',
       content:
           'The orthostatic test is one of the tools that allows you to find a balance between training and recovery',
     ),
     OnBoardingCommon(
-      imageStr: 'assets/images/bodybuilding_man.png',
+      imageStr: 'assets/images/gif/bodybuilding_man.json',
       content:
           'The orthostatic test is one of the tools that allows you to find a balance between training and recovery',
     ),
@@ -120,7 +120,10 @@ class _OnBoardingState extends State<OnBoarding> {
                     initialImage = 'assets/images/Rectangle.png';
                   }
                   return Container(
-                    child: Image.asset(initialImage),
+                    child: Image.asset(
+                      initialImage,
+                      scale: 3,
+                    ),
                     margin: EdgeInsets.only(right: 6.0),
                   );
                 })

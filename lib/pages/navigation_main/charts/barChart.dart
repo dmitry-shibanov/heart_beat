@@ -146,6 +146,12 @@ class BarChartCustomState extends State<BarChartCustom> {
       gridData: FlGridData(
         show: true,
         horizontalInterval: 20,
+        getDrawingHorizontalLine: (value) {
+          return FlLine(
+              color: const Color(0xff37434d),
+              strokeWidth: 1,
+              dashArray: [5, 5]);
+        },
       ),
       barTouchData: BarTouchData(
         touchTooltipData: BarTouchTooltipData(

@@ -93,7 +93,7 @@ class LineChartCustom extends StatelessWidget {
         minX: 0,
         maxX: this.isMonth ? 32 : 13,
         maxY: 150,
-        minY: -10,
+        minY: 0,
       );
 
   LineTouchData get lineTouchData => LineTouchData(
@@ -123,16 +123,17 @@ class LineChartCustom extends StatelessWidget {
   SideTitles leftTitles({required GetTitleFunction getTitles}) => SideTitles(
         getTitles: getTitles,
         showTitles: true,
-        // margin: 8,
-        reservedSize: 30,
+        margin: 8,
+        // reservedSize: 30,
         getTextStyles: (value) => const TextStyle(
           color: Color.fromRGBO(70, 70, 70, 1),
           fontWeight: FontWeight.w400,
-          fontSize: 10,
+          fontSize: 13,
         ),
       );
 
   SideTitles get bottomTitles => SideTitles(
+        rotateAngle: this.isMonth ? null : -90.0,
         showTitles: true,
         reservedSize: 22,
         margin: 10,
@@ -175,6 +176,13 @@ class LineChartCustom extends StatelessWidget {
   FlGridData get gridData => FlGridData(
         show: true,
         horizontalInterval: 20,
+        getDrawingHorizontalLine: (value) {
+          return FlLine(
+            color: const Color(0xff37434d),
+            strokeWidth: 1,
+            dashArray: [5,5]
+          );
+        },
       );
 
   FlBorderData get borderData => FlBorderData(

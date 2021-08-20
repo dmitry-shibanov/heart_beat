@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class OnBoardingCommon extends StatelessWidget {
   late final String imageStr;
@@ -26,16 +27,9 @@ class OnBoardingCommon extends StatelessWidget {
             ),
           ),
           Container(
-            height: constraints.maxHeight * 0.5,
-            margin: EdgeInsets.only(right: 52, left: 42, top: 50),
-            child: Image.asset(
-              imageStr,
-              width: double.infinity,
-              scale: 3,
-              // height: 281,
-              fit: BoxFit.cover,
-            ),
-          )
+              height: constraints.maxHeight * 0.5,
+              margin: EdgeInsets.only(right: 52, left: 42, top: 50),
+              child: Lottie.asset(imageStr, fit: BoxFit.cover))
         ],
       );
     });

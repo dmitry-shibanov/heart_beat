@@ -38,6 +38,7 @@ dependencies:
   fl_chart: ^0.36.3
   camera: 0.7.0+4
   intl: ^0.17.0
+  lottie: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -83,6 +84,9 @@ flutter:
     - assets/images/svg/Emoji_happy.svg
     - assets/images/svg/Emoji_normal.svg
     - assets/images/svg/Emoji_sad.svg
+    - assets/images/gif/bodybuilding_man.json
+    - assets/images/gif/green_man.json
+    - assets/images/gif/run_man.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
