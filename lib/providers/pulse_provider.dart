@@ -6,10 +6,9 @@ import 'package:flutter_heart/helper/PulseWorker.dart';
 class PulseProvider with ChangeNotifier {
   PulseWorker _worker = PulseWorker();
   Timer? _timer;
-  Duration _interval = Duration(seconds: 1);
-  List<int?> _pulses = [];
+  final List<int?> _pulses = [];
   int _currentSeconds = 0;
-  List<int> complexTest = [];
+  final List<int> complexTest = [];
 
   bool get isActive => _timer != null && _timer!.isActive;
 
@@ -23,17 +22,15 @@ class PulseProvider with ChangeNotifier {
       complexTest.length == 2 ? (complexTest[1] - complexTest[0]).abs() : -100;
 
   void startTimer(Duration duration, VoidCallback action) async {
-    action();
     if (complexTest.length == 2) {
       complexTest.clear();
     }
     _pulses.clear();
-    final seconds = duration.inSeconds;
     bool isStarted = await _worker.start();
     if (isStarted) {
       var duration = Duration(seconds: 1);
       _timer = Timer.periodic(duration, (timer) {
-        _worker!.current().then((value) {
+        _worker?.current().then((value) {
           print(timer.tick);
           print(value);
           _pulses.add(value);
@@ -64,4 +61,5 @@ class PulseProvider with ChangeNotifier {
   }
 
   // void clearComplex()
+  // void resetData()
 }

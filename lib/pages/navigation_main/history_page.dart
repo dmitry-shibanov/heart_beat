@@ -8,6 +8,11 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class HistoryPage extends StatelessWidget {
+  final emojis = [
+    'assets/images/svg/Emoji_happy.svg',
+    'assets/images/svg/Emoji_normal.svg',
+    'assets/images/svg/Emoji_sad.svg'
+  ];
   @override
   Widget build(BuildContext context) {
     final dbHelper = Provider.of<DbHelper>(context);
@@ -30,7 +35,7 @@ class HistoryPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SvgPicture.asset('assets/images/svg/Emoji_normal.svg'),
+                SvgPicture.asset(emojis[pulse.smile]),
                 Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,

@@ -10,7 +10,6 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("devicePixelRatio is ${MediaQuery.of(context).devicePixelRatio}");
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(color: Colors.blue),

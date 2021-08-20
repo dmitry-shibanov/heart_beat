@@ -8,8 +8,12 @@ class TestPulse {
   int get smile => _smile;
   int get metric => _metric;
 
-  void set id(int value) {
+  set id(int value) {
     this._id = value;
+  }
+
+  set smile(int value) {
+    this._smile = value;
   }
 
   DateTime get date =>

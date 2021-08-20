@@ -11,7 +11,6 @@ class FirstMeasure extends StatefulWidget {
 class _FirstMeasureState extends State<FirstMeasure> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     widget.startMeasure();
   }

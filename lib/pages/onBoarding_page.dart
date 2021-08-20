@@ -143,7 +143,7 @@ class _OnBoardingState extends State<OnBoarding> {
           Container(
             width: double.infinity,
             margin: EdgeInsets.symmetric(horizontal: 16.0),
-            height: MediaQuery.of(context).size.height * 0.1,
+            height: MediaQuery.of(context).size.height * 0.06,
             decoration: ShapeDecoration(
               shape: StadiumBorder(),
               gradient: LinearGradient(

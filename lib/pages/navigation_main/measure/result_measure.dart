@@ -38,6 +38,7 @@ class _MeasureResultState extends State<MeasureResult> {
     final provider = Provider.of<PulseProvider>(context);
     return Consumer2<PulseProvider, DbHelper>(
         builder: (context, pulseProvider, db, child) {
+      final record = db.getLastRecord;
           print("last record is ${db.getLastRecord.toMap().toString()}");
       return LayoutBuilder(
         builder: (context, constraints) {
@@ -106,6 +107,8 @@ class _MeasureResultState extends State<MeasureResult> {
                               index,
                               GestureDetector(
                                 onTap: () {
+                                  record.smile = index;
+                                  db.updateRecord(record);
                                   setState(() {
                                     currentMood = index;
                                   });

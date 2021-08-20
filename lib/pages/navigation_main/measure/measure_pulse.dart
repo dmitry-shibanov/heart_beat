@@ -11,6 +11,10 @@ import 'package:flutter_heart/providers/pulse_provider.dart';
 import 'package:provider/provider.dart';
 
 class MeasurePulse extends StatefulWidget {
+  Function(VoidCallback?) parentCb;
+
+  MeasurePulse(this.parentCb);
+
   @override
   _MeasurePulseState createState() => _MeasurePulseState();
 }
@@ -22,7 +26,6 @@ class _MeasurePulseState extends State<MeasurePulse>
   bool startAnimation = false;
   bool gotData = false;
   Widget sprite = SpriteDemo();
-  final obj = new PulseWorker();
 
   late final AnimationController _controller = AnimationController(
     duration: const Duration(seconds: 2),
@@ -32,17 +35,26 @@ class _MeasurePulseState extends State<MeasurePulse>
   late final Animation<double> _animation =
       Tween<double>(begin: 1.0, end: 0.0).animate(_controller);
 
+  void resetData() {
+    setState(() {
+      startMeasure = false;
+      startAnimation = false;
+      gotData = false;
+    });
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _controller.addStatusListener((status) {
       if (AnimationStatus.completed == status) {
+        print("startAnimation completed is ${startAnimation}");
         setState(() {
-          startAnimation = !startAnimation;
+          startAnimation = true; //!startAnimation;
         });
       } else if (AnimationStatus.reverse == status) {
-        startAnimation = !startAnimation;
+                print("startAnimation reverse is ${startAnimation}");
+        startAnimation = false;//!startAnimation;
       }
     });
   }
@@ -53,34 +65,54 @@ class _MeasurePulseState extends State<MeasurePulse>
     super.dispose();
   }
 
+  void collectPulseData(PulseProvider provider, DbHelper db) {
+    final map = {
+      "image": 1,
+      "date": DateTime.now().microsecondsSinceEpoch,
+      "metric": provider.pulse
+    };
+    TestPulse pules = TestPulse.fromJson(map);
+    db.addRecord(pules);
+  }
+
   void onButtonPressed(PulseProvider provider, DbHelper db) async {
     try {
-      if (!startMeasure) {
-        // bool result = await obj.start();
-        // print("result start ${result}");
-        provider.startTimer(Duration(minutes: 1), () {
-          // _pageController.nextPage(
-          //     duration: Duration(seconds: 1), curve: Curves.easeInOut);
+      if (!gotData) {
+        if (!startMeasure) {
+          
+          provider.startTimer(Duration(minutes: 1), () {
+            collectPulseData(provider, db);
+            widget.parentCb(resetData);
+            setState(() {
+              gotData = true;
+              startMeasure = false;
+            });
+          });
+        } else {
+          provider.stopTimer(Duration(minutes: 1));
+          collectPulseData(provider, db);
+          widget.parentCb(resetData);
           setState(() {
-            // gotData = true;
+            gotData = true;
+          });
+        }
+      } else {
+        _controller.reverse();
+        widget.parentCb(null);
+        Future.delayed(Duration(seconds: 1), () {
+          setState(() {
+            gotData = !gotData;
+            startMeasure = true;
+          });
+          provider.startTimer(Duration(minutes: 1), () {
+            collectPulseData(provider, db);
+            widget.parentCb(resetData);
+            setState(() {
+              gotData = true;
+              startMeasure = false;
+            });
           });
         });
-      } else {
-        provider.stopTimer(Duration(minutes: 1));
-        print('came here');
-
-        final map = {
-          "image": 1,
-          "date": DateTime.now().microsecondsSinceEpoch,
-          "metric": provider.pulse
-        };
-        TestPulse pules = TestPulse.fromJson(map);
-        db.addRecord(pules);
-        setState(() {
-          gotData = true;
-        });
-        // _pageController.nextPage(
-        //     duration: Duration(seconds: 1), curve: Curves.easeInOut);
       }
     } catch (Exception) {
       await showCupertinoDialog(
@@ -119,49 +151,52 @@ class _MeasurePulseState extends State<MeasurePulse>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        !gotData ? Column(children: [
-        Stack(
-          alignment: Alignment(0.0, 0.0),
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 3,
-            ),
-            FadeTransition(
-              opacity: _animation,
-              child: Image.asset('assets/images/pink_circle.png'),
-            ),
-            Visibility(
-              child: sprite,
-              visible: startAnimation,
-            ),
-            Image.asset(
-              'assets/images/red_heart.png',
-              scale: 3,
-            ),
-          ],
-        ),
-        SizedBox(height: 40.0),
-        startMeasure
-            ? Text(
-                'Do not remove your finger,\n measurement is in progress',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Color.fromRGBO(177, 177, 177, 1),
-                    fontSize: 17,
-                    fontWeight: FontWeight.w400),
-              )
-            : Text(
-                'Put your finger on camera\n and flashlight',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 17,
-                  color: Color.fromRGBO(70, 70, 70, 1),
+        !gotData
+            ? Column(children: [
+                Stack(
+                  alignment: Alignment(0.0, 0.0),
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 3,
+                    ),
+                    FadeTransition(
+                      opacity: _animation,
+                      child: Image.asset('assets/images/pink_circle.png'),
+                    ),
+                    Visibility(
+                      child: sprite,
+                      visible: startAnimation,
+                    ),
+                    Image.asset(
+                      'assets/images/red_heart.png',
+                      scale: 3,
+                    ),
+                  ],
                 ),
+                SizedBox(height: 40.0),
+                startMeasure
+                    ? Text(
+                        'Do not remove your finger,\n measurement is in progress',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Color.fromRGBO(177, 177, 177, 1),
+                            fontSize: 17,
+                            fontWeight: FontWeight.w400),
+                      )
+                    : Text(
+                        'Put your finger on camera\n and flashlight',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 17,
+                          color: Color.fromRGBO(70, 70, 70, 1),
+                        ),
+                      ),
+              ])
+            : Container(
+                height: MediaQuery.of(context).size.height * 0.7,
+                child: MeasureResult(provider.pulse),
               ),
-        ]) : Container(
-          height: MediaQuery.of(context).size.height * 0.7,
-          child:MeasureResult(provider.pulse),),
         Expanded(
           child: Align(
               alignment: Alignment.bottomCenter,
@@ -175,7 +210,11 @@ class _MeasurePulseState extends State<MeasurePulse>
                           Color.fromRGBO(196, 20, 50, 1)
                         ],
                       ),
-                title: startMeasure ? 'Stop' : gotData ? 'Restart' : 'Start',
+                title: startMeasure
+                    ? 'Stop'
+                    : gotData
+                        ? 'Restart'
+                        : 'Start',
                 onPressed: () => onButtonPressed(provider, db),
               )),
         )

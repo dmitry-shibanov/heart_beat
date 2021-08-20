@@ -35,6 +35,11 @@ class DbHelper with ChangeNotifier {
     _provider!.insert(pules);
   }
 
+  void updateRecord(TestPulse pulse) {
+    _provider!.update(pulse);
+    notifyListeners();
+  }
+
   void removeRecord({TestPulse? pulse, int? id}) {
     if (pulse == null && id == null) {
       throw new Error();

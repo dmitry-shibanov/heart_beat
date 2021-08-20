@@ -1,18 +1,17 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_heart/components/button.dart';
-import 'package:flutter_heart/helper/PulseWorker.dart';
 import 'package:flutter_heart/pages/navigation_main/orthostaticTest/firstIntro.dart';
 import 'package:flutter_heart/pages/navigation_main/orthostaticTest/firstMeasure.dart';
 import 'package:flutter_heart/pages/navigation_main/orthostaticTest/orthostaticTimer.dart';
 import 'package:flutter_heart/pages/navigation_main/orthostaticTest/resultInfo.dart';
 import 'package:flutter_heart/pages/navigation_main/orthostaticTest/testResult.dart';
-import 'package:flutter_heart/providers/main_page_provider.dart';
 import 'package:flutter_heart/providers/pulse_provider.dart';
 import 'package:provider/provider.dart';
 
 class Orthostatic extends StatefulWidget {
+  final Function(VoidCallback) parentCb;
+
+  Orthostatic(this.parentCb);
   @override
   _OrthostaticState createState() => _OrthostaticState();
 }
@@ -21,41 +20,20 @@ class _OrthostaticState extends State<Orthostatic> {
   final _pageController = PageController();
   int currentPage = 0;
   bool _isDisabled = false;
-  int currentSeconds = 0;
-  Timer? _timer;
-  PulseWorker? _worker;
-  List<int?> pulses = [];
+  bool _isReset = false;
+
+  void resetData() {
+    _pageController.jumpToPage(0);
+    setState(() {
+      _isDisabled = false;
+      _isReset = false;
+    });
+  }
 
   void setDisabled(bool value) {
     setState(() {
       _isDisabled = value;
     });
-  }
-
-  startMeasure() async {
-    _worker = new PulseWorker();
-
-    bool isStarted = await _worker!.start();
-    if (isStarted) {
-      var duration = Duration(seconds: 1);
-      _timer = Timer.periodic(duration, (timer) async {
-        int? pulse = await _worker!.current();
-        setState(() {
-          print(timer.tick);
-          pulses.add(pulse);
-          currentSeconds = timer.tick;
-          if (timer.tick >= 60) {
-            timer.cancel();
-            _timer = null;
-          }
-        });
-      });
-    }
-
-    if (_timer != null && !_timer!.isActive) {
-      _pageController.nextPage(
-          duration: Duration(seconds: 1), curve: Curves.easeInOut);
-    }
   }
 
   String setButtonTitle() {
@@ -72,7 +50,7 @@ class _OrthostaticState extends State<Orthostatic> {
     }
   }
 
-  String getMessage(PulseProvider provider) {
+  String getMessageHealth(PulseProvider provider) {
     final number = provider.diff;
     if (number <= 12) {
       return 'Good fitness level';
@@ -85,10 +63,45 @@ class _OrthostaticState extends State<Orthostatic> {
     }
   }
 
+  void _stopMetrics(PulseProvider provider) {
+    if (!_isReset) {
+      provider.stopTimer(Duration(minutes: 1));
+      _pageController.nextPage(
+          duration: Duration(seconds: 1), curve: Curves.easeInOut);
+    }
+  }
+
+  VoidCallback getOnPressButton(PulseProvider provider) {
+    switch (currentPage) {
+      case 1:
+      case 4:
+        return () => null;
+      case 2:
+      case 5:
+        return () => _stopMetrics(provider);
+      case 6:
+        return () {
+          setState(() {
+            _isReset = true;
+          });
+          _pageController.nextPage(
+              duration: Duration(seconds: 1), curve: Curves.easeInOut);
+          widget.parentCb(resetData);
+        };
+      default:
+        return () {
+          if (!_isReset) {
+            _pageController.nextPage(
+                duration: Duration(seconds: 1), curve: Curves.easeInOut);
+          }
+        };
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<PulseProvider>(context);
-    final mainProvider = Provider.of<MainProvider>(context);
+    print("_isReset is ${_isReset}");
     return Column(
       children: [
         Container(
@@ -102,43 +115,36 @@ class _OrthostaticState extends State<Orthostatic> {
                 imageAsset: 'assets/images/man_with_clocks.png',
                 action: (bool value) {
                   setDisabled(value);
+                  _pageController.nextPage(
+                      duration: Duration(seconds: 1), curve: Curves.easeInOut);
                   provider.startTimer(
                       Duration(minutes: 1),
                       () => _pageController.nextPage(
                           duration: Duration(seconds: 1),
                           curve: Curves.easeInOut));
-                  // if (provider.isActive)
-                  //   _pageController.nextPage(
-                  //       duration: Duration(seconds: 1),
-                  //       curve: Curves.easeInOut);
                 },
               ),
               FirstMeasure(startMeasure: () => null),
               OrthostaticResult(
                 resultPulse: provider.pulse.toString(),
-                // (pulses.reduce((value, element) => value! + element!)! /
-                //         pulses.length)
-                //     .toString(),
               ),
               OrthostaticTimer(
                 imageAsset: 'assets/images/hourglass.png',
                 action: (bool value) {
                   setDisabled(value);
+                  _pageController.nextPage(
+                      duration: Duration(seconds: 1), curve: Curves.easeInOut);
                   provider.startTimer(
                       Duration(minutes: 1),
                       () => _pageController.nextPage(
                           duration: Duration(seconds: 1),
                           curve: Curves.easeInOut));
-                  // if (provider.isActive)
-                  //   _pageController.nextPage(
-                  //       duration: Duration(seconds: 1),
-                  //       curve: Curves.easeInOut);
                 },
               ),
               FirstMeasure(startMeasure: () => null),
               OrthostaticResult(
                 resultPulse: provider.pulse.toString(),
-                message: getMessage(provider),
+                message: getMessageHealth(provider),
               ),
               OrthostaticTestResult()
             ],
@@ -162,27 +168,15 @@ class _OrthostaticState extends State<Orthostatic> {
                       ? Colors.red
                       : Colors.white,
                   gradient: currentPage == 2 || currentPage == 5
-                      ? null: LinearGradient(
+                      ? null
+                      : LinearGradient(
                           colors: [
                             Color.fromRGBO(
                                 252, 90, 68, _isDisabled ? 0.5 : 1.0),
                             Color.fromRGBO(196, 20, 50, _isDisabled ? 0.5 : 1.0)
                           ],
                         ),
-                  onPressed: currentPage == 1 || currentPage == 4
-                      ? () => null
-                      : () {
-                          if (currentPage == 2 || currentPage == 5) {
-                            provider.stopTimer(Duration(minutes: 1));
-                            _pageController.nextPage(
-                                duration: Duration(seconds: 1),
-                                curve: Curves.easeInOut);
-                          } else {
-                            _pageController.nextPage(
-                                duration: Duration(seconds: 1),
-                                curve: Curves.easeInOut);
-                          }
-                        },
+                  onPressed: getOnPressButton(provider),
                   insetsGeometry:
                       EdgeInsets.only(right: 16.0, left: 16.0, bottom: 16.0),
                 )),

@@ -29,7 +29,8 @@ class _OrthostaticTimerState extends State<OrthostaticTimer>
             SizedBox(height: 16.0),
             Container(
               height: constraints.maxHeight * 0.6,
-              child: Image.asset(widget.imageAsset),),
+              child: Image.asset(widget.imageAsset),
+            ),
             TweenAnimationBuilder<Duration>(
                 duration: Duration(minutes: 1),
                 tween: Tween(begin: Duration(minutes: 1), end: Duration.zero),

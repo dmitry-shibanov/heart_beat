@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_heart/pages/navigation_main/charts/Charts.dart';
 import 'package:flutter_heart/pages/navigation_main/history_page.dart';
 import 'package:flutter_heart/pages/navigation_main/measure/measure_pulse.dart';
-import 'package:flutter_heart/pages/navigation_main/measure/result_measure.dart';
 import 'package:flutter_heart/pages/orthostatic.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
@@ -14,29 +13,29 @@ class Intro extends StatefulWidget {
 }
 
 class _IntroState extends State<Intro> {
-  final List<int> images = [1];
   final List<String> titles = ['History', 'Statistics', 'Orthostatic Test'];
-
-  final List<String> content = [
-    "Hold your finger on the\ncamera lens and the\nflashlight",
-    "The orthostatic test is one of\nthe tools that allows you to\nfind a balance between\ntraining and recovery"
-  ];
-  final List<Widget> _pages = [
-    MeasurePulse(),
-    HistoryPage(),
-    Charts(),
-    Orthostatic()
-  ];
-  int currentPage = 0;
+  late final List<Widget> _pages;
   int _bottomIndex = 0;
+  bool isBackButtonAvailable = false;
+  VoidCallback? backCallBack;
+
+  _IntroState() {
+    _pages = [
+      MeasurePulse(pressBackButtonCallBack),
+      HistoryPage(),
+      Charts(),
+      Orthostatic(pressBackButtonCallBack)
+    ];
+  }
 
   void changeIndex(int index) {
     setState(() {
       _bottomIndex = index;
+      isBackButtonAvailable = false;
     });
   }
 
-  Widget? setTitle() {
+  Widget? getTitle() {
     if (_bottomIndex > 0) {
       return Text(
         titles[_bottomIndex - 1],
@@ -48,11 +47,29 @@ class _IntroState extends State<Intro> {
     return null;
   }
 
+  void pressBackButtonCallBack(VoidCallback? cb) {
+    setState(() {
+      backCallBack = cb;
+      isBackButtonAvailable = cb == null ? false : true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: setTitle(),
+        leading: isBackButtonAvailable
+            ? BackButton(
+                onPressed: () {
+                  backCallBack!();
+                  setState(() {
+                    isBackButtonAvailable = false;
+                  });
+                },
+                color: Colors.black,
+              )
+            : null,
+        title: getTitle(),
         backgroundColor: Colors.white,
         elevation: _bottomIndex == 0 ? 0.0 : 4.0,
         actions: [

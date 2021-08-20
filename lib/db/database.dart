@@ -80,8 +80,10 @@ create table $tablePulse (
   }
 
   Future<int> update(TestPulse record) async {
-    return await _db.update(tablePulse, record.toMap(),
+    final result = await _db.update(tablePulse, record.toMap(),
         where: '$columnId = ?', whereArgs: [record.id]);
+    print("update result is ${result}");
+    return result;
   }
 
   Future close() async => _db.close();
