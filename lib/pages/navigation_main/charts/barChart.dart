@@ -101,8 +101,8 @@ class BarChartCustomState extends State<BarChartCustom> {
   Map<int, double> createProperDataSet(
       DateTime first, DateTime second, List<TestPulse> records) {
     List<int> days = List.generate(7, (index) => 0);
-    print(
-        "DateFormat.d().format(records[0].date) is ${DateFormat.d().format(records[0].date)}");
+    // print(
+    //     "DateFormat.d().format(records[0].date) is ${DateFormat.d().format(records[0].date)}");
     Map<int, double> results = {};
     records.forEach((e) {
       print(DateFormat.d().format(e.date));
