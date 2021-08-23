@@ -20,7 +20,6 @@ class TestPulse {
       DateTime.fromMicrosecondsSinceEpoch(this._dateMiliseconds);
 
   TestPulse.fromJson(Map<dynamic, dynamic?> map) {
-    print("initial map is ${map}");
     this._id = map['_id'];
     this._smile = map['image'];
     this._dateMiliseconds = map['date'];
@@ -29,9 +28,7 @@ class TestPulse {
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = new Map();
-    print("id is ${id}");
     if (_id != null) {
-      print("id is ${id}");
       map['_id'] = this._id;
     }
     map['image'] = this._smile;

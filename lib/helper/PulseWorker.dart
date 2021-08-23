@@ -9,7 +9,7 @@ class PulseWorker {
     if (kDebugMode) {
       return Future.value(true);
     }
-    return await _platform.invokeMethod<bool>('start') ?? false;
+    return _platform.invokeMethod<bool>('start').then((value) => value as bool);
   }
 
   Future<bool> stop() async {

@@ -38,6 +38,7 @@ class _MeasurePulseState extends State<MeasurePulse>
       startMeasure = false;
       startAnimation = false;
       gotData = false;
+      _controller.reset();
     });
   }
 
@@ -48,11 +49,11 @@ class _MeasurePulseState extends State<MeasurePulse>
       if (AnimationStatus.completed == status) {
         print("startAnimation completed is ${startAnimation}");
         setState(() {
-          startAnimation = true; //!startAnimation;
+          startAnimation = true;
         });
       } else if (AnimationStatus.reverse == status) {
         print("startAnimation reverse is ${startAnimation}");
-        startAnimation = false; //!startAnimation;
+        startAnimation = false;
       }
     });
   }
@@ -86,7 +87,7 @@ class _MeasurePulseState extends State<MeasurePulse>
             });
           });
         } else {
-          provider.stopTimer(Duration(minutes: 1));
+          provider.stopTimer();
           collectPulseData(provider, db);
           widget.parentCb(resetData);
           setState(() {

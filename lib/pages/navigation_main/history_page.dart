@@ -29,66 +29,65 @@ class HistoryPage extends StatelessWidget {
   Widget itemBuilder(BuildContext context, TestPulse pulse, DbHelper dbHelper) {
     DateTime dateTime = pulse.date;
     return Card(
-        child: Container(
-            padding: EdgeInsets.symmetric(vertical: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SvgPicture.asset(emojis[pulse.smile]),
-                Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "${DateFormat.MMM().format(dateTime)} ${DateFormat.d().format(dateTime)}",
-                        style: TextStyle(color: Colors.black, fontSize: 16.0),
-                      ),
-                      Text(
-                        '${DateFormat('hh:mm a').format(dateTime)}',
-                        style: TextStyle(color: Colors.black, fontSize: 14.0),
-                      ),
-                    ]),
-                Text(
-                  pulse.metric.toString(),
-                  style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18),
-                ),
-                Text('BPM'),
-                IconButton(
-                  iconSize: 18.0,
-                  icon: Icon(Entypo.cross),
-                  color: Colors.grey,
-                  onPressed: () async {
-                    final result = await showCupertinoDialog(
-                        barrierDismissible: true,
-                        context: context,
-                        builder: (ctx) {
-                          return CupertinoAlertDialog(
-                            title: Text('Delete result?'),
-                            content: Text('This action cannot be undone'),
-                            actions: [
-                              CupertinoDialogAction(
-                                child: Text('Cancel'),
-                                onPressed: () => Navigator.pop(context),
-                              ),
-                              CupertinoDialogAction(
-                                isDefaultAction: true,
-                                child: Text('Delete'),
-                                onPressed: () {
-                                  dbHelper.removeRecord(pulse: pulse);
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                          );
-                        });
-                    print(result);
-                  },
-                )
-              ],
-            )));
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SvgPicture.asset(emojis[pulse.smile]),
+            Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "${DateFormat.MMM().format(dateTime)} ${DateFormat.d().format(dateTime)}",
+                    style: TextStyle(color: Colors.black, fontSize: 16.0),
+                  ),
+                  Text(
+                    '${DateFormat('hh:mm a').format(dateTime)}',
+                    style: TextStyle(color: Colors.black, fontSize: 14.0),
+                  ),
+                ]),
+            Text(
+              pulse.metric.toString(),
+              style: TextStyle(
+                  color: Colors.red, fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+            Text('BPM'),
+            IconButton(
+              iconSize: 18.0,
+              icon: Icon(Entypo.cross),
+              color: Colors.grey,
+              onPressed: () async {
+                final result = await showCupertinoDialog(
+                    barrierDismissible: true,
+                    context: context,
+                    builder: (ctx) {
+                      return CupertinoAlertDialog(
+                        title: Text('Delete result?'),
+                        content: Text('This action cannot be undone'),
+                        actions: [
+                          CupertinoDialogAction(
+                            child: Text('Cancel'),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                          CupertinoDialogAction(
+                            isDefaultAction: true,
+                            child: Text('Delete'),
+                            onPressed: () {
+                              dbHelper.removeRecord(pulse: pulse);
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    });
+              },
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

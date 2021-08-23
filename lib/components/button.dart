@@ -39,7 +39,7 @@ class Button extends StatelessWidget {
           title,
           style: TextStyle(
               color: textColor,
-              fontSize: 17 * MediaQuery.of(context).textScaleFactor,
+              fontSize: 17,
               fontWeight: FontWeight.w600),
         ),
         onPressed: onPressed,

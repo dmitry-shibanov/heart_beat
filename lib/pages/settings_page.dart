@@ -8,9 +8,16 @@ class SettingsPage extends StatelessWidget {
     'About app': 'assets/images/info.png'
   };
 
+  Future<bool> _onWillPop(BuildContext context) async {
+    Navigator.of(context).pushReplacementNamed('/main');
+    return Future.value(true);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () => _onWillPop(context),
+      child: Scaffold(
       appBar: AppBar(
         leading: BackButton(color: Colors.blue),
         backgroundColor: Colors.white,
@@ -83,6 +90,6 @@ class SettingsPage extends StatelessWidget {
               ]),
         );
       }),
-    );
+    ),);
   }
 }

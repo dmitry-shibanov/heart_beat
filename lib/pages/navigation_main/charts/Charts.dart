@@ -32,10 +32,11 @@ class _ChartsState extends State<Charts> {
     switch (groupValue) {
       case 0:
         var now = DateTime.now();
-        final start = now.subtract(Duration(days: now.weekday - 1));
+        final diff = (now.weekday - 7).abs();
+        final start = now.subtract(Duration(days: now.weekday - diff));
         setState(() {
           first = start.add(Duration(days: (multiPly[0] + 1) * 7));
-          second = first.subtract(Duration(days: 7));
+          second = first.subtract(Duration(days: 6));
         });
 
         var firstDate = DateFormat.d().format(first);
@@ -47,11 +48,6 @@ class _ChartsState extends State<Charts> {
         return "${secondDate} ${secondMonth} - ${firstDate} ${firstMonth}";
       case 1:
         final now = DateTime.now();
-        // int firstDay = DateTime()
-        //         int lastday = DateTime(now.year, now.month - 5, 0).day; february
-        // int lastday = DateTime(now.year, now.month - 5, 0).day;
-        // print(lastday);
-        // int current
         setState(() {
           monthDate = DateTime(now.year, now.month + multiPly[1], 1);
         });

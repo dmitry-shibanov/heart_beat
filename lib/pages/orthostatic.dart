@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_heart/components/button.dart';
 import 'package:flutter_heart/pages/navigation_main/orthostaticTest/firstIntro.dart';
@@ -65,7 +66,7 @@ class _OrthostaticState extends State<Orthostatic> {
 
   void _stopMetrics(PulseProvider provider) {
     if (!_isReset) {
-      provider.stopTimer(Duration(minutes: 1));
+      provider.stopTimer();
       _pageController.nextPage(
           duration: Duration(seconds: 1), curve: Curves.easeInOut);
     }
@@ -101,7 +102,6 @@ class _OrthostaticState extends State<Orthostatic> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<PulseProvider>(context);
-    print("_isReset is ${_isReset}");
     return Column(
       children: [
         Container(
@@ -117,11 +117,35 @@ class _OrthostaticState extends State<Orthostatic> {
                   setDisabled(value);
                   _pageController.nextPage(
                       duration: Duration(seconds: 1), curve: Curves.easeInOut);
-                  provider.startTimer(
-                      Duration(minutes: 1),
-                      () => _pageController.nextPage(
-                          duration: Duration(seconds: 1),
-                          curve: Curves.easeInOut));
+                  try {
+                    provider
+                        .startTimer(
+                            Duration(minutes: 1),
+                            () => _pageController.nextPage(
+                                duration: Duration(seconds: 1),
+                                curve: Curves.easeInOut))
+                        .catchError((err) {
+                          showCupertinoDialog(
+                        barrierDismissible: true,
+                        context: context,
+                        builder: (ctx) {
+                          return CupertinoAlertDialog(
+                            title: Text('No flashlight'),
+                            content:
+                                Text('The device does not have a flashlight'),
+                            actions: [
+                              CupertinoDialogAction(
+                                isDefaultAction: true,
+                                child: Text('Ok'),
+                                onPressed: () => Navigator.pop(context, 1),
+                              ),
+                            ],
+                          );
+                        });
+                        });
+                  } catch (Exception) {
+                    
+                  }
                 },
               ),
               FirstMeasure(startMeasure: () => null),

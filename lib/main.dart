@@ -6,7 +6,6 @@ import 'package:flutter_heart/pages/onBoarding_page.dart';
 import 'package:flutter_heart/pages/settings_page.dart';
 import 'package:flutter_heart/pages/splash_screen.dart';
 import 'package:flutter_heart/providers/data_helper.dart';
-import 'package:flutter_heart/providers/main_page_provider.dart';
 import 'package:flutter_heart/providers/pulse_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -17,24 +16,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  Route _createRoute() {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => OnBoarding(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(0.0, 1.0);
-        const end = Offset.zero;
-        const curve = Curves.ease;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +23,6 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => DatabaseProvider()),
         ChangeNotifierProvider(create: (_) => PulseProvider()),
-        ChangeNotifierProvider(create: (_) => MainProvider()),
         ChangeNotifierProxyProvider<DatabaseProvider, DbHelper>(
           create: (context) => DbHelper([], null),
           update: (context, db, previous) => DbHelper(previous?.records, db),
@@ -83,7 +63,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<DatabaseProvider>(builder: (ctx, db, child) {
-      print("db.isOpen ${db.isOpen}");
       if (db.isOpen) {
         return OnBoarding();
       } else {

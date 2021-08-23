@@ -39,7 +39,7 @@ create table $tablePulse (
 ''');
     });
 
-    // To-Do remove
+    // To-Do remove this delay was added for splash screen
     new Future.delayed(const Duration(seconds: 5), () {
       _isOpen = true;
       notifyListeners();
@@ -47,7 +47,6 @@ create table $tablePulse (
   }
 
   Future<int> insert(TestPulse pulse) async {
-    print("pulse.toMap() is ${pulse.toMap()}");
     int id = await _db.insert(tablePulse, pulse.toMap());
     pulse.id = id;
     return id;
@@ -82,7 +81,6 @@ create table $tablePulse (
   Future<int> update(TestPulse record) async {
     final result = await _db.update(tablePulse, record.toMap(),
         where: '$columnId = ?', whereArgs: [record.id]);
-    print("update result is ${result}");
     return result;
   }
 

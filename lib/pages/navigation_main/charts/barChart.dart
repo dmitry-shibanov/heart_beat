@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +8,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class BarChartCustom extends StatefulWidget {
-  DateTime start;
-  DateTime finish;
+  final DateTime start;
+  final DateTime finish;
   BarChartCustom({required this.start, required this.finish});
 
   final List<Color> availableColors = [
@@ -27,7 +26,7 @@ class BarChartCustom extends StatefulWidget {
 }
 
 class BarChartCustomState extends State<BarChartCustom> {
-  final Color barBackgroundColor = const Color(0xff72d8bf);
+  final Color barBackgroundColor = Colors.red;//const Color(0xff72d8bf);
   final Duration animDuration = const Duration(milliseconds: 250);
 
   int touchedIndex = -1;
@@ -101,20 +100,18 @@ class BarChartCustomState extends State<BarChartCustom> {
   Map<int, double> createProperDataSet(
       DateTime first, DateTime second, List<TestPulse> records) {
     List<int> days = List.generate(7, (index) => 0);
-    // print(
-    //     "DateFormat.d().format(records[0].date) is ${DateFormat.d().format(records[0].date)}");
     Map<int, double> results = {};
     records.forEach((e) {
       print(DateFormat.d().format(e.date));
       if (e.date.microsecondsSinceEpoch >= first.microsecondsSinceEpoch &&
           e.date.microsecondsSinceEpoch <= second.microsecondsSinceEpoch) {
-        print('came here');
-        if (results.containsKey(e.date.weekday)) {
-          results.update(e.date.weekday, (value) => value + e.metric);
+            int key = (e.date.weekday + 1) % 7;
+        if (results.containsKey(key)) {
+          results.update(key, (value) => value + e.metric);
         } else {
-          results[e.date.weekday] = e.metric.toDouble();
+          results[key] = e.metric.toDouble();
         }
-        days[e.date.weekday - 1] += 1;
+        days[key - 1] += 1;
       }
     });
 
@@ -224,19 +221,19 @@ class BarChartCustomState extends State<BarChartCustom> {
           getTitles: (double value) {
             switch (value.toInt()) {
               case 0:
-                return 'MON';
-              case 1:
-                return 'TUE';
-              case 2:
-                return 'WED';
-              case 3:
-                return 'TUE';
-              case 4:
-                return 'FRI';
-              case 5:
-                return 'SUT';
-              case 6:
                 return 'SUN';
+              case 1:
+                return 'MON';
+              case 2:
+                return 'TUE';
+              case 3:
+                return 'WED';
+              case 4:
+                return 'TUE';
+              case 5:
+                return 'FRI';
+              case 6:
+                return 'SUT';
               default:
                 return '';
             }

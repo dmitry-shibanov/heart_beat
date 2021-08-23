@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_heart/components/button.dart';
 import 'package:flutter_heart/pages/intro/help_us.dart';
 import 'package:flutter_heart/pages/intro/OnBoardingOne.dart';
 import 'package:flutter_heart/pages/intro/onBoardingCommon.dart';
@@ -45,12 +46,26 @@ class _OnBoardingState extends State<OnBoarding> {
     if (await _inAppReview.isAvailable()) {
       _inAppReview.requestReview();
     } else {
-      print('open actual store listing');
       // TODO: use your own store ids
       _inAppReview.openStoreListing(
         appStoreId: '<your app store id>',
         microsoftStoreId: '<your microsoft store id>',
       );
+    }
+  }
+
+  void onPressButton() {
+    if (onBoardingPages.length == currentPage + 1) {
+      Navigator.pushReplacementNamed(context, '/main');
+    } else {
+      _pageController.animateToPage(
+        currentPage + 1,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+      if (currentPage + 1 == 1) {
+        _rateAndReviewApp();
+      }
     }
   }
 
@@ -143,47 +158,17 @@ class _OnBoardingState extends State<OnBoarding> {
                 ),
               ),
             ),
-          Container(
-            width: double.infinity,
-            margin: EdgeInsets.symmetric(horizontal: 16.0),
+          Button(
             height: MediaQuery.of(context).size.height * 0.06,
-            decoration: ShapeDecoration(
-              shape: StadiumBorder(),
-              gradient: LinearGradient(
-                colors: [
-                  Color.fromRGBO(252, 90, 68, 1),
-                  Color.fromRGBO(196, 20, 50, 1)
-                ],
-              ),
+            insetsGeometry: EdgeInsets.symmetric(horizontal: 16.0),
+            gradient: LinearGradient(
+              colors: [
+                Color.fromRGBO(252, 90, 68, 1),
+                Color.fromRGBO(196, 20, 50, 1)
+              ],
             ),
-            child: MaterialButton(
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              shape: StadiumBorder(),
-              child: Text(
-                currentPage == 5 ? 'Subscribe' : 'Next',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600),
-              ),
-              onPressed: () async {
-                print("currentPage is ${currentPage}");
-                print(onBoardingPages.length);
-                if (onBoardingPages.length == currentPage + 1) {
-                  Navigator.pushReplacementNamed(context, '/main');
-                } else {
-                  _pageController.animateToPage(
-                    currentPage + 1,
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.easeInOut,
-                  );
-                  if (currentPage + 1 == 1) {
-                    print('came here');
-                    _rateAndReviewApp();
-                  }
-                }
-              },
-            ),
+            onPressed: onPressButton,
+            title: currentPage == 5 ? 'Subscribe' : 'Next',
           ),
           if (currentPage == 5)
             Container(

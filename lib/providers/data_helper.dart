@@ -49,7 +49,6 @@ class DbHelper with ChangeNotifier {
 
     _userRecords!.removeWhere((element) => element.id == id);
     notifyListeners();
-    print("id is ${id}");
     _provider!.delete(id!);
   }
 }

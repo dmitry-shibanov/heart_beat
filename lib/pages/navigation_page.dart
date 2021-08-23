@@ -3,7 +3,9 @@ import 'package:flutter_heart/pages/navigation_main/charts/Charts.dart';
 import 'package:flutter_heart/pages/navigation_main/history_page.dart';
 import 'package:flutter_heart/pages/navigation_main/measure/measure_pulse.dart';
 import 'package:flutter_heart/pages/orthostatic.dart';
+import 'package:flutter_heart/providers/pulse_provider.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:provider/provider.dart';
 
 class Intro extends StatefulWidget {
   @override
@@ -54,8 +56,15 @@ class _IntroState extends State<Intro> {
     });
   }
 
+  Widget getPage(PulseProvider provider) {
+    provider.stopTimer();
+
+    return _pages[_bottomIndex];
+  }
+
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<PulseProvider>(context);
     return Scaffold(
       appBar: AppBar(
         leading: isBackButtonAvailable
@@ -78,12 +87,15 @@ class _IntroState extends State<Intro> {
               Feather.settings,
               color: Colors.grey,
             ),
-            onPressed: () => Navigator.pushNamed(context, '/settings'),
+            onPressed: (){
+              provider.stopTimer();
+              Navigator.pushNamed(context, '/settings');
+            },
           )
         ],
       ),
       body: Container(
-          margin: EdgeInsets.only(top: 16.0), child: _pages[_bottomIndex]),
+          margin: EdgeInsets.only(top: 16.0), child: getPage(provider)),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _bottomIndex,
         selectedItemColor: Colors.redAccent,

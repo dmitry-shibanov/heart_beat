@@ -39,7 +39,6 @@ class _MeasureResultState extends State<MeasureResult> {
     return Consumer2<PulseProvider, DbHelper>(
         builder: (context, pulseProvider, db, child) {
       final record = db.getLastRecord;
-          print("last record is ${db.getLastRecord.toMap().toString()}");
       return LayoutBuilder(
         builder: (context, constraints) {
           return Column(
