@@ -19,8 +19,10 @@ class TestPulse {
   DateTime get date =>
       DateTime.fromMicrosecondsSinceEpoch(this._dateMiliseconds);
 
-  TestPulse.fromJson(Map<dynamic, dynamic?> map) {
-    this._id = map['_id'];
+  TestPulse.fromJson(Map<dynamic, dynamic> map) {
+    if (map["_id"] != null) {
+      this._id = map['_id'];
+    }
     this._smile = map['image'];
     this._dateMiliseconds = map['date'];
     this._metric = map['metric'];
