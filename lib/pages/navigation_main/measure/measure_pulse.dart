@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_heart/components/button.dart';
 import 'package:flutter_heart/components/circlePainter.dart';
+import 'package:flutter_heart/components/flshlight_dialog.dart';
 import 'package:flutter_heart/models/TestPulse.dart';
 import 'package:flutter_heart/pages/navigation_main/measure/result_measure.dart';
 import 'package:flutter_heart/providers/data_helper.dart';
@@ -47,12 +48,10 @@ class _MeasurePulseState extends State<MeasurePulse>
     super.initState();
     _controller.addStatusListener((status) {
       if (AnimationStatus.completed == status) {
-        print("startAnimation completed is ${startAnimation}");
         setState(() {
           startAnimation = true;
         });
       } else if (AnimationStatus.reverse == status) {
-        print("startAnimation reverse is ${startAnimation}");
         startAnimation = false;
       }
     });
@@ -74,11 +73,11 @@ class _MeasurePulseState extends State<MeasurePulse>
     db.addRecord(pules);
   }
 
-  void onButtonPressed(PulseProvider provider, DbHelper db) async {
+  Future<void> onButtonPressed(PulseProvider provider, DbHelper db) async {
     try {
       if (!gotData) {
         if (!startMeasure) {
-          provider.startTimer(Duration(minutes: 1), () {
+          final result = await provider.startTimer(Duration(seconds: 15), () {
             collectPulseData(provider, db);
             widget.parentCb(resetData);
             setState(() {
@@ -86,6 +85,9 @@ class _MeasurePulseState extends State<MeasurePulse>
               startMeasure = false;
             });
           });
+          if (!result) {
+            throw new Exception();
+          }
         } else {
           provider.stopTimer();
           collectPulseData(provider, db);
@@ -102,7 +104,7 @@ class _MeasurePulseState extends State<MeasurePulse>
             gotData = !gotData;
             startMeasure = true;
           });
-          provider.startTimer(Duration(minutes: 1), () {
+          provider.startTimer(Duration(seconds: 15), () {
             collectPulseData(provider, db);
             widget.parentCb(resetData);
             setState(() {
@@ -113,21 +115,12 @@ class _MeasurePulseState extends State<MeasurePulse>
         });
       }
     } catch (Exception) {
-      print('came to exception');
       await showCupertinoDialog(
           barrierDismissible: true,
           context: context,
           builder: (ctx) {
-            return CupertinoAlertDialog(
-              title: Text('No flashlight'),
-              content: Text('The device does not have a flashlight'),
-              actions: [
-                CupertinoDialogAction(
-                  isDefaultAction: true,
-                  child: Text('Ok'),
-                  onPressed: () => Navigator.pop(context, 1),
-                ),
-              ],
+            return FlashLighDialog(
+              onPressed: () => Navigator.pop(context, 1),
             );
           });
       return;

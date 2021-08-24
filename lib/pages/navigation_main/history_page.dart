@@ -60,7 +60,7 @@ class HistoryPage extends StatelessWidget {
               icon: Icon(Entypo.cross),
               color: Colors.grey,
               onPressed: () async {
-                final result = await showCupertinoDialog(
+                await showCupertinoDialog(
                     barrierDismissible: true,
                     context: context,
                     builder: (ctx) {

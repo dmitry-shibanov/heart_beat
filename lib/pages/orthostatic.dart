@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_heart/components/button.dart';
+import 'package:flutter_heart/components/flshlight_dialog.dart';
 import 'package:flutter_heart/pages/navigation_main/orthostaticTest/firstIntro.dart';
 import 'package:flutter_heart/pages/navigation_main/orthostaticTest/firstMeasure.dart';
 import 'package:flutter_heart/pages/navigation_main/orthostaticTest/orthostaticTimer.dart';
@@ -117,35 +118,25 @@ class _OrthostaticState extends State<Orthostatic> {
                   setDisabled(value);
                   _pageController.nextPage(
                       duration: Duration(seconds: 1), curve: Curves.easeInOut);
-                  try {
-                    provider
-                        .startTimer(
-                            Duration(minutes: 1),
-                            () => _pageController.nextPage(
-                                duration: Duration(seconds: 1),
-                                curve: Curves.easeInOut))
-                        .catchError((err) {
-                          showCupertinoDialog(
+                  provider
+                      .startTimer(
+                          Duration(seconds: 15),
+                          () => _pageController.nextPage(
+                              duration: Duration(seconds: 1),
+                              curve: Curves.easeInOut))
+                      .catchError((err) {
+                    showCupertinoDialog(
                         barrierDismissible: true,
                         context: context,
                         builder: (ctx) {
-                          return CupertinoAlertDialog(
-                            title: Text('No flashlight'),
-                            content:
-                                Text('The device does not have a flashlight'),
-                            actions: [
-                              CupertinoDialogAction(
-                                isDefaultAction: true,
-                                child: Text('Ok'),
-                                onPressed: () => Navigator.pop(context, 1),
-                              ),
-                            ],
+                          return FlashLighDialog(
+                            onPressed: () {
+                              Navigator.pop(context, 1);
+                              resetData();
+                            },
                           );
                         });
-                        });
-                  } catch (Exception) {
-                    
-                  }
+                  });
                 },
               ),
               FirstMeasure(startMeasure: () => null),
@@ -159,7 +150,7 @@ class _OrthostaticState extends State<Orthostatic> {
                   _pageController.nextPage(
                       duration: Duration(seconds: 1), curve: Curves.easeInOut);
                   provider.startTimer(
-                      Duration(minutes: 1),
+                      Duration(seconds: 15),
                       () => _pageController.nextPage(
                           duration: Duration(seconds: 1),
                           curve: Curves.easeInOut));

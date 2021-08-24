@@ -6,9 +6,9 @@ import 'package:flutter/services.dart';
 class PulseWorker {
   final _platform = new MethodChannel('aw.measure.cia');
   Future<bool> start() async {
-    if (kDebugMode) {
-      return Future.value(true);
-    }
+    // if (kDebugMode) {
+    //   return Future.value(true);
+    // }
     return _platform.invokeMethod<bool>('start').then((value) => value as bool);
   }
 

@@ -102,7 +102,6 @@ class BarChartCustomState extends State<BarChartCustom> {
     List<int> days = List.generate(7, (index) => 0);
     Map<int, double> results = {};
     records.forEach((e) {
-      print(DateFormat.d().format(e.date));
       if (e.date.microsecondsSinceEpoch >= first.microsecondsSinceEpoch &&
           e.date.microsecondsSinceEpoch <= second.microsecondsSinceEpoch) {
             int key = (e.date.weekday + 1) % 7;
@@ -123,7 +122,6 @@ class BarChartCustomState extends State<BarChartCustom> {
   }
 
   List<BarChartGroupData> showingGroups(Map<int, double> map) {
-    print(DateTime.now().weekday);
     final keys = map.keys.toList();
     return List.generate(7, (i) {
       if (keys.contains(i + 1)) {
@@ -137,7 +135,6 @@ class BarChartCustomState extends State<BarChartCustom> {
   BarChartData mainBarData(DbHelper db) {
     final records = db.records;
     final dataSet = createProperDataSet(widget.start, widget.finish, records);
-    print("dataSet is ${dataSet}");
     return BarChartData(
       maxY: 150,
       gridData: FlGridData(

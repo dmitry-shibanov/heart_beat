@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_heart/db/database.dart';
 import 'package:flutter_heart/models/TestPulse.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class DbHelper with ChangeNotifier {
   DatabaseProvider? _provider;

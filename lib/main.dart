@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
             fontFamily: "Montserrat",
-            scaffoldBackgroundColor: Color.fromRGBO(253, 254, 255, 1),
+            scaffoldBackgroundColor: const Color.fromRGBO(253, 254, 255, 1),
           ),
           home: AnimatedSwitcher(
             duration: Duration(milliseconds: 2000),

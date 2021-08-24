@@ -39,7 +39,6 @@ class LineChartCustom extends StatelessWidget {
     List<int> days = List.generate(lastDay, (index) => 0);
     Map<int, double> results = {};
     records.forEach((e) {
-      print(DateFormat.d().format(e.date));
       if (e.date.microsecondsSinceEpoch >= first.microsecondsSinceEpoch &&
           e.date.microsecondsSinceEpoch <= second.microsecondsSinceEpoch) {
         if (results.containsKey(e.date.day)) {
@@ -65,7 +64,6 @@ class LineChartCustom extends StatelessWidget {
     List<int> months = List.generate(lastMonth, (index) => 0);
     Map<int, double> results = {};
     records.forEach((e) {
-      print(DateFormat.d().format(e.date));
       if (e.date.microsecondsSinceEpoch >= first.microsecondsSinceEpoch &&
           e.date.microsecondsSinceEpoch <= second.microsecondsSinceEpoch) {
         if (results.containsKey(e.date.month)) {
@@ -157,8 +155,7 @@ class LineChartCustom extends StatelessWidget {
             'OCT',
             'NOV',
             'DEC',
-            '',
-            '',
+            ''
           ];
           if (this.isMonth) {
             if (value == 1.0 || value == 31.0) {
