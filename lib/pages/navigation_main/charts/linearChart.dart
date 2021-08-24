@@ -125,7 +125,7 @@ class LineChartCustom extends StatelessWidget {
         showTitles: true,
         margin: 8,
         // reservedSize: 30,
-        getTextStyles: (value) => const TextStyle(
+        getTextStyles: (context, value) => const TextStyle(
           color: Color.fromRGBO(70, 70, 70, 1),
           fontWeight: FontWeight.w400,
           fontSize: 13,
@@ -137,7 +137,7 @@ class LineChartCustom extends StatelessWidget {
         showTitles: true,
         reservedSize: 22,
         margin: 10,
-        getTextStyles: (value) => const TextStyle(
+        getTextStyles: (context, value) => const TextStyle(
           color: Color.fromRGBO(70, 70, 70, 1),
           fontWeight: FontWeight.w400,
           fontSize: 10,
